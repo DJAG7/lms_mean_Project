@@ -1,0 +1,198 @@
+<div #fullScreenDiv class="fullScreenDiv">
+  <div id="navSidebar" class="navsidebar">
+    <div
+      class="container-fluid mb-3"
+      *ngFor="let section of sections; let sectionindex = index"
+    >
+      <h5 class="text-white fwt600 mt-2">{{ section.name }}</h5>
+      <div class="row">
+        <div
+          *ngFor="let question of section.questions; let questionindex = index"
+          class="col-2 bg-primary border-light rounded ml-2 mb-2 item"
+          (click)="navigateQuestion(sectionindex, questionindex)"
+        >
+          <a class="fwt600">{{ questionindex + 1 }}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <ng-container *ngIf="questionIndex != -1">
+      <div [ngClass]="testData?.useCamera === true ? 'mt-10' : 'mt-3'">
+        <div *ngIf="!codeMode" class="container p-5">
+          <div class="row">
+            <div class="col-8">
+              <ng-container *ngIf="showQuestion.questionTitleType !== 'photo'">
+                <div class="d-flex">
+                  <h1 class="white fwt600 f-24">
+                    {{ showQuestion.questionTitle }}
+                  </h1>
+                </div>
+              </ng-container>
+              <!-- <h1 class="white fwt600 f-45">AAAAA</h1> -->
+              <div
+                *ngIf="showQuestion.questionTitleType == 'photo'"
+                class="low-grey fwt600 f-16 imgque"
+              >
+                <img
+                  _ngcontent-mwf-c6=""
+                  alt=""
+                  class="card-img-top"
+                  [src]="showQuestion.questionTitle"
+                />
+              </div>
+            </div>
+            <div
+              *ngIf="!checkHTML(showQuestion.questionDescripton)"
+              class="col-8 low-grey fwt600 f-16"
+            >
+              {{ showQuestion.questionDescripton }}
+            </div>
+            <div
+              *ngIf="checkHTML(showQuestion.questionDescripton)"
+              class="col-8 low-grey fwt600 f-16"
+            >
+              <div [innerHTML]="showQuestion.questionDescripton"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <app-quiz-nav
+        [modeType]="questionType"
+        [isFullScreenTest]="true"
+        (previous)="previous()"
+        (next)="next()"
+        (emitToggleCodeMode)="handleToggleCodeMode()"
+        [firstQuestion]="firstQuestion"
+        [lastQuestion]="lastQuestion"
+      ></app-quiz-nav>
+      <app-options
+        *ngIf="questionType == 'maq'"
+        type="maq"
+        [options]="showQuestion.options"
+        [quizForm]="sectionForm"
+        [questionNumber]="questionIndex"
+      ></app-options>
+      <app-options
+        *ngIf="questionType == 'truefalse'"
+        type="truefalse"
+        [options]="showQuestion.options"
+        [quizForm]="sectionForm"
+        [questionNumber]="questionIndex"
+      ></app-options>
+      <app-options
+        *ngIf="questionType == 'mcq'"
+        type="mcq"
+        [options]="showQuestion.options"
+        [quizForm]="sectionForm"
+        [questionNumber]="questionIndex"
+      ></app-options>
+      <app-editor
+        *ngIf="questionType == 'coding'"
+        (customRun)="customrun($event)"
+        (sampleTestCasesRun)="sampleTestCasesRun($event)"
+        [showRunSampleTestCases]="true"
+        [outputbox]="output"
+        [quizForm]="sectionForm"
+        [questionNumber]="questionIndex"
+      ></app-editor>
+      <h5 class="white mt-3" *ngIf="showSampleTestCaseLoader">
+        Running Sample Tests
+      </h5>
+      <app-sample-tests
+        class="mt-3"
+        (scrollToBottom)="scrollToBottom()"
+        *ngIf="showSampleTestCasesResult && !showSampleTestCaseLoader"
+        [SampleTestsResults]="sampleTestCaseResult"
+      ></app-sample-tests>
+    </ng-container>
+    <ng-container *ngIf="questionIndex === -1 && !lastQuestion">
+      <div class="">
+        <div class="container p-5 mt-5">
+          <div class="row">
+            <div class="col-12 mt-5">
+              <div class="d-flex">
+                <span>
+                  <h1 class="white fwt600 f-45">
+                    {{ sections[sectionIndex]?.name }}
+                  </h1>
+                </span>
+                <!-- <h1 class="low-grey fwt600 f-45 ml-auto">
+                        {{lesson?.['length']?.hour <= 9? '0'+lesson?.['length']?.hour : lesson?.['length']?.hour}}:{{lesson?.['length']?.minutes <= 9? '0'+lesson?.['length']?.minutes:lesson?.['length']?.minutes}}
+                      </h1> -->
+              </div>
+            </div>
+
+            <div class="col-12">
+              <h1 class="white fwt600 f-24">Description</h1>
+            </div>
+
+            <div
+              class="col-8 low-grey fwt600 f-22"
+              [innerHTML]="sections[sectionIndex]?.description"
+            ></div>
+            <div class="col-12">
+              <span>
+                <button
+                  class="btn btn-outline-light"
+                  [disabled]="firstQuestion"
+                  (click)="previous()"
+                >
+                  Previous
+                </button>
+              </span>
+              <span class="ml-3">
+                <button
+                  class="btn btn-outline-primary"
+                  (click)="startSection()"
+                >
+                  Continue
+                </button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="questionIndex === -1 && lastQuestion">
+      <div class="mt-5">
+        <div class="container">
+          <div class="row">
+            <div class="col-12 f-24 text-white">
+              Are you sure you want to submit?
+            </div>
+            <div class="col-12 mt-5">
+              <button
+                class="btn btn-outline-light"
+                [disabled]="firstQuestion"
+                (click)="previous()"
+              >
+                Previous
+              </button>
+              <button
+                class="btn btn-outline-primary ml-3"
+                (click)="submitTest()"
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <div class="video">
+      <video
+        *ngIf="testData?.useCamera === true"
+        #video
+        id="video"
+        autoplay
+        style="height: 13rem"
+      ></video>
+      <app-timer
+        class="ml-auto mt-2"
+        [time]="testData.length"
+        (submit)="submitTest()"
+      ></app-timer>
+    </div>
+  </div>
+</div>

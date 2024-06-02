@@ -1,0 +1,14 @@
+<div class="container root mt-5">
+    <app-header>
+        <span class="header">My Tests</span>
+        <!-- <span class="button-data">Add Courses</span> -->
+        <button (click)="redirectToAddTest()" class="button btn btn-outline-secondary pt-0 pb-0 ml-auto grey f-13">Add Test</button>
+      </app-header>
+</div>
+<div class=" root container-fluid p-0 mt-4 ">
+
+    <div *ngFor="let test of tests;let i=index">
+        <app-test-card [test]="test" [type]="'instructor'" [index]="i" (delete)="deleteTest($event)"></app-test-card>
+    </div>
+
+</div>

@@ -1,0 +1,29 @@
+<nav class="navbar navbar-expand-lg navbar-dark root mt-0 p-0">
+  <div class="container p-0">
+    <div class="mt-0 ml-5 d-flex">
+      <img
+        src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg"
+        width="50"
+        height="50"
+        alt="Angular"
+        class="rounded mt-2"
+      />
+      <div class="ml-4 mt-2">
+        <span class="f-16 fwt700 white">{{course.name}}</span>
+        <br /><small class="f-13 fwt600 grey">{{course.instructors[0].firstname+" "+course.instructors[0].lastname}}</small>
+      </div>
+    </div>
+    <div *ngIf="typeOfHeader == 'lesson'">
+      <button
+        
+        class="btn btn-outline-success mt-2 fwt600 f-13"
+       (click)="completed()"
+       [disabled] = "lessonCompleted"
+      >
+        {{lessonCompleted?'COMPLETED':'MARK COMPLETED'}}
+      </button>
+      <button class="btn btn-outline-primary mt-2 fwt600 f-13 ml-3" (click)="previous()">PREVIOUS</button>
+      <button class="btn btn-outline-primary mt-2 fwt600 f-13 ml-3" (click)="next()">NEXT</button>
+    </div>
+  </div>
+</nav>

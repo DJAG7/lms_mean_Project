@@ -1,0 +1,12 @@
+<div class="page-wrapper chiller-theme" [ngClass]="showSidebar?'toggled':''" >
+  <app-sidebar (emitClose)="closeSidebar()"> </app-sidebar>
+  <main class="page-content">
+    <app-navbar [showSidebar]="showSidebar" (emitSidebarOpen)="openSidebar()" ></app-navbar>
+    <div class="p-0">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>
+
+
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>

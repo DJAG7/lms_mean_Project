@@ -1,0 +1,49 @@
+<div class="container white">
+  <div class="space-between">
+    <div class="text-white mt-4 mb-3">
+      <h2>Students for Test -{{testSummary.name}}</h2>
+    </div>
+    <div>
+      <button *ngIf="testDataLoaded" class="btn btn-primary mt-4 mb-3" (click)="downloadScores()">
+        Download Scores
+      </button>
+    </div>
+  </div>
+  <table
+    class="table table-striped table-bordered table-sm row-border hover white"
+    datatable
+    [dtOptions]="dtOptions"
+    [dtTrigger]="dtTrigger"
+  >
+    <thead>
+      <tr>
+        <th>Student</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Total Questions</th>
+        <th>Correct</th>
+        <th>Wrong/Unattempted</th>
+        <th>Result</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let student of students">
+        <td>{{ student.student.name }}</td>
+        <td>{{ student.student.email }}</td>
+        <td>{{ student.status }}</td>
+        <td>{{ student.score.totalQuestion }}</td>
+        <td>{{ student.score.correct*100 |number:'1.0-2' }}</td>
+        <td>{{ student.score.wrong*100 |number:'1.0-2' }}</td>
+        <td>
+          <button
+            *ngIf="student.status == 'completed'"
+            class="btn btn-primary"
+            (click)="navigateResult(student)"
+          >
+            See Result
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

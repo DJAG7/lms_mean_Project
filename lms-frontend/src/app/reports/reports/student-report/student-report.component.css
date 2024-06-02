@@ -1,0 +1,22 @@
+.card {
+  margin: 4rem;
+}
+.head {
+  /* margin-left: 5rem; */
+  display: flex;
+  align-items: center;
+}
+.stats-item {
+  display: flex;
+  .icon-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .icon {
+      font-size: 3rem;
+    }
+  }
+}
+.pt-none {
+  pointer-events: none;
+}

@@ -1,0 +1,67 @@
+<nav class="navbar navbar-expand navbar-dark shadow-dark text-light text-bold">
+  <span class="d-none d-md-flex align-items-center mr-16pt">
+    <button
+      class="btn btn-outline-primary mr-3"
+      (click)="openSidebar()"
+      *ngIf="!showSidebar && showsidebtn"
+    >
+      <i class="bi bi-list"></i>
+    </button>
+    <span class="avatar avatar-sm mr-12pt bg-dark px-2 rounded">
+      <span class="avatar-title rounded navbar-avatar">
+        <i class="bi bi-droplet-half navbar-icon"></i
+      ></span>
+    </span>
+
+    <small *ngIf="user?.role == 'student'" class="flex d-flex flex-column ml-3">
+      <strong class="navbar-text-100">Experience IQ</strong>
+      <span class="navbar-text-50 text-secondary" *ngIf="user.role == 'student'"
+        >{{ user.exp | floor }} Pts</span
+      >
+    </small>
+    <small *ngIf="user == null" class="flex d-flex flex-column ml-3">
+      <strong class="navbar-text-100">Sparrow Coding Labs</strong>
+    </small>
+  </span>
+  <button
+    class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarsExample02"
+    aria-controls="navbarsExample02"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+  >
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarsExample02">
+    <ul class="navbar-nav mr-auto"></ul>
+
+    <div *ngIf="user !== null" class="dropdown dropleft">
+      <button
+        class="btn btn-primary dropdown-toggle circle p-1"
+        type="button"
+        id="dropdownMenuButton"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        <i
+          class="bi bi-person-square profile-icon"
+          style="margin-left: -8px"
+        ></i>
+      </button>
+      <div class="dropdown-menu bg-dark">
+        <a class="dropdown-item text-secondary" *ngIf="user.role==='student'" (click)="navigateProfile()">Profile</a>
+        <a class="dropdown-item text-secondary" (click)="logout()">Logout</a>
+      </div>
+    </div>
+    <a
+      class="btn btn-outline-light"
+      routerLink="/auth/login"
+      *ngIf="user == null"
+      >Login</a
+    >
+  </div>
+</nav>

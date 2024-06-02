@@ -1,0 +1,36 @@
+<div class="container root mt-5">
+  <app-header>
+    <span class="header">My Courses</span>
+    <!-- <span class="button-data">Add Courses</span> -->
+    <button (click)="redirectToAddCourse()" class="button btn btn-outline-secondary pt-0 pb-0 ml-auto grey f-13">Add Course</button>
+  </app-header>
+
+  <div class="container-fluid p-0 mt-4">
+    <div class="row justify-content-center">
+      <!-- <div class="col-sm-6">
+        <div class="d-flex">
+          <p class="white f-16 fwt600 p-0">LEARNING PATHS</p>
+          <hr class= " p-0 ml-0 ruler">
+        </div>
+        <app-learning-paths [courses]="courses"></app-learning-paths>
+      </div> -->
+      <div class="col-sm-12">
+        <div class="d-flex">
+            <p class="white f-16 fwt600 p-0">COURSES</p>
+            <!-- <hr class= " p-0 ml-0 ruler"> -->
+            <!-- <div class="ml-auto mr-4">
+                <a class="btn btn-primary mb-3 mr-1 p-1 " href="#carouselExampleIndicators2" role="button" data-slide="prev">
+                    <i class="bi bi-arrow-left"></i>
+                </a>
+                <a class="btn btn-primary mb-3 p-1 " href="#carouselExampleIndicators2" role="button" data-slide="next">
+                    <i class="bi bi-arrow-right"></i>
+                </a>
+            </div> -->
+        </div>
+    <app-dashboard-courses [name]="user.name" [courses]="courses"></app-dashboard-courses>
+      </div>
+    </div>
+  </div>
+</div>
+
+

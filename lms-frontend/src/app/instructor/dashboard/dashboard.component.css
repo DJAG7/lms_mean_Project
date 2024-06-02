@@ -1,0 +1,8 @@
+.root{
+    max-width: 960px;
+}
+.ruler{
+    color:#19191a;
+    min-width:16rem;
+    border: 1px solid;
+}

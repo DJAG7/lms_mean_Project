@@ -1,0 +1,41 @@
+<div class="card root cardbg shadow mx-auto mb-2">
+  <div class="card-body p-1">
+    <div class="dis-flex-row">
+      <div class="mt-1 ml-2 white">{{ index + 1 }}.</div>
+      <div class="ml-2 mt-2 data">
+        <span class="f-16 fwt700 white">{{ test.name }}</span> <br /><small
+          class="f-13 fwt600 grey"
+          >{{ test.sections }} Sections</small
+        >
+      </div>
+    </div>
+    <div>
+      <ng-container *ngIf="type === 'student'">
+        <a
+          *ngIf="test.status == 'pending'"
+          class="ml-auto my-auto mr-3 f-11 grey fwt700 ptr"
+          (click)="startTest()"
+          >Start Test</a
+        >
+        <p
+          *ngIf="test.status == 'completed' && test.isResultMade"
+          class="ml-auto my-auto mr-3 f-11 grey fwt700 ptr"
+          (click)="showResults()"
+        >
+          See Result
+        </p>
+      </ng-container>
+      <ng-container *ngIf="type === 'instructor'">
+        <a
+          class="ml-auto my-auto mr-3 mb-1 f-11 grey fwt700"
+          (click)="editTest()"
+          >Edit</a
+        >
+        <i
+          class="bi bi-trash-fill ml-auto grey mr-2 f-20 deleteTest"
+          (click)="deleteTest()"
+        ></i>
+      </ng-container>
+    </div>
+  </div>
+</div>

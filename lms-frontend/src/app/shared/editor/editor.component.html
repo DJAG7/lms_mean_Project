@@ -1,0 +1,173 @@
+<div class="container editor rounded mt-5">
+  <div class="row border rounded">
+    <div class="col-12 p-0">
+      <div class="first-row">
+        <div>
+          <p class="logo f-22 fwt800 text-primary">Sparrow</p>
+        </div>
+        <div class="d-flex">
+          <div class="mr-3">
+            <select
+              class="form-control mx-auto"
+              [(ngModel)]="selectedFontSize"
+              (change)="selectFontSize($event)"
+              style="
+                font-weight: 20px;
+                margin-right: 20px;
+                margin-left: 20px;
+                min-width: 30px;
+              "
+              name="lang"
+            >
+              <option value="14px">14</option>
+              <option value="16px">16</option>
+              <option value="18px">18</option>
+              <option value="20px">20</option>
+              <option value="22px">22</option>
+              <option value="24px">24</option>
+              <option value="26px">26</option>
+              <option value="28px">28</option>
+              <option value="30px">30</option>
+            </select>
+          </div>
+          <div class="mr-3">
+            <select
+              class="form-control mx-auto"
+              [(ngModel)]="selectedTheme"
+              (change)="selectTheme($event)"
+              style="font-weight: 20px; margin-right: 20px; margin-left: 20px"
+              name="lang"
+            >
+              <option value="Language">Select Theme</option>
+              <option value="ace/theme/chrome">Chrome</option>
+              <option value="ace/theme/dawn">Dawn</option>
+              <option value="ace/theme/eclipse">Eclipse</option>
+              <option value="ace/theme/tomorrow">Tomorrow</option>
+              <option value="ace/theme/chaos">Chaos</option>
+              <option value="ace/theme/monokai">Monokai</option>
+              <option value="ace/theme/vibrant_ink">Vibrant Ink</option>
+              <option value="ace/theme/twilight">Twilight</option>
+            </select>
+          </div>
+          <div>
+            <select
+              class="form-control mx-auto"
+              [(ngModel)]="selectedMode"
+              (change)="selectMode($event)"
+              style="
+                font-weight: 20px;
+                margin-right: 20px;
+                margin-left: 20px;
+                min-width: 150px;
+              "
+              name="lang"
+            >
+              <option value="Language">Select Language</option>
+              <option value="c">C</option>
+              <option value="cpp">C++</option>
+              <option value="java">Java</option>
+              <option value="python">Python</option>
+              <option value="csharp">C#</option>
+              <option value="golang">Go Lang</option>
+              <option value="javascript">JavaScript</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row second-row border">
+    <div [ngClass]="showCode ? editorRowTwoClass : 'col-2'" class="border f-18">
+      <p class="white align-left p-2 m-0">
+        <i
+          class="bi bi-caret-left-fill mr-2 icon"
+          *ngIf="showCode"
+          (click)="handleEditorExpand('code')"
+        ></i>
+        <i
+          class="bi bi-caret-right-fill mr-2 icon"
+          *ngIf="!showCode"
+          (click)="handleEditorExpand('code')"
+        ></i
+        >Code
+      </p>
+    </div>
+    <div
+      [ngClass]="showInput ? editorRowTwoClass : 'col-2'"
+      class="border f-18"
+    >
+      <p class="white align-center p-2 m-0">
+        Input
+        <i
+          class="bi bi-arrows-fullscreen"
+          *ngIf="!showInput"
+          (click)="handleEditorExpand('input')"
+        ></i
+        ><i
+          class="bi bi-caret-right-fill ml-2 icon"
+          *ngIf="showInput"
+          (click)="handleEditorExpand('input')"
+        ></i>
+      </p>
+    </div>
+    <div
+      [ngClass]="showOutput ? editorRowTwoClass : 'col-2'"
+      class="border f-18"
+    >
+      <p class="white align-right f-18 m-0 p-2">
+        Output<i
+          class="bi bi-caret-left-fill ml-2 icon"
+          *ngIf="!showOutput"
+          (click)="handleEditorExpand('output')"
+        ></i
+        ><i
+          class="bi bi-caret-right-fill ml-2 icon"
+          *ngIf="showOutput"
+          (click)="handleEditorExpand('output')"
+        ></i>
+      </p>
+    </div>
+  </div>
+  <div class="row third-row border f-22">
+    <div class="p-0" [ngClass]="showCode ? editorRowThreeClass : 'none'">
+      <div class="app-ace-editor" #editor></div>
+    </div>
+    <div class="p-0" [ngClass]="showInput ? editorRowThreeClass : 'none'">
+      <textarea
+        id="input"
+        class="form-control"
+        name="input"
+        class="form-control"
+        style="height: 100%"
+        [(ngModel)]="inputbox"
+      ></textarea>
+    </div>
+    <div class="p-0" [ngClass]="showOutput ? editorRowThreeClass : 'none'">
+      <textarea
+        id="output"
+        class="form-control"
+        name="input"
+        class="form-control"
+        style="height: 100%"
+        [(ngModel)]="outputbox"
+        readonly
+      ></textarea>
+    </div>
+  </div>
+  <div class="row fourth-row border rounded">
+    <!-- <span class="f-11 white mt-4"
+        >Note: For Custom inputs,time limit is capped to 1 sec</span
+      > -->
+    <button
+      *ngIf="showRunSampleTestCases"
+      class="btn btn-primary fwt600 ml-auto mr-2 custom-btn"
+      (click)="runSampleTestCases()"
+    >
+      Run Sample Tests
+    </button>
+    <button class="btn btn-success fwt600 custom-btn" (click)="run()">
+      Run
+    </button>
+    <!-- <button class="btn btn-primary mt-3 ml-3">Submit</button> -->
+  </div>
+</div>

@@ -1,0 +1,48 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: judge0-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: judge0-server
+  template:
+    metadata:
+      labels:
+        app: judge0-server
+    spec:
+      containers:
+        - name: server
+          image: judge0/judge0:1.13.0
+          env:
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: REDIS_PASSWORD
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_PASSWORD
+          volumeMounts:
+            - name: judge0-config
+              mountPath: /judge0.conf
+              subPath: judge0.conf
+              readOnly: true
+          ports:
+            - containerPort: 2358
+          resources:
+            limits:
+              cpu: "300m"
+              memory: "512Mi"
+            requests:
+              cpu: "200m"
+              memory: "512Mi"
+      volumes:
+        - name: judge0-config
+          configMap:
+            name: judge0-config
+      

@@ -1,0 +1,17 @@
+<div class="card root cardbg shadow  " >
+  <div class="card-body p-1">
+    <div class=" mt-1 ml-2">
+      <img
+        [src]="course.thumbnail"
+        width="40"
+        height="40"
+        alt="Angular"
+        class="rounded f-left "
+      />
+    </div>
+    <div class="ml-2 mt-2 data"><span class="f-16 fwt700 white">{{course.name}}</span> <br/><small class="f-13 fwt600 grey">{{course.modulesLength}} Modules</small></div>
+    <a *ngIf="!course.courseCompleted" class=" ml-auto my-auto mr-3 f-11 grey fwt700" (click)="resume()" >Resume</a>
+    <p *ngIf="course.courseCompleted" class=" ml-auto my-auto mr-3 f-11 grey fwt700" >Completed</p>
+  </div>
+  
+</div>

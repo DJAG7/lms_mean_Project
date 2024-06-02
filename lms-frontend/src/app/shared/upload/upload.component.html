@@ -1,0 +1,6 @@
+<div>
+    <input class="file-input" type="file" (change)="uploadFile($event)" #file>
+    <div class="text-grey" *ngIf="control.value">
+        Current Uploaded File: <a [href]="control.value" target="_blank">Link</a>
+    </div>
+</div>

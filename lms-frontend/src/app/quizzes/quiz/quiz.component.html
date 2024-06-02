@@ -1,0 +1,64 @@
+<div class="">
+  <app-subheader [course]="course"></app-subheader>
+  <div class="container p-5">
+    <div class="row">
+      <div class="col-12">
+        <div class="d-flex">
+          <h1 class="white fwt600 f-45">{{ showQuestion.questionTitle }}</h1>
+          <app-timer
+            *ngIf="quizType == 'assessment'"
+            class="ml-auto"
+            [time]="quiz['length']"
+            (submit)="submit()"
+          ></app-timer>
+        </div>
+      </div>
+      <div class="col-8 low-grey fwt600 f-22">
+        {{ showQuestion.questionDescripton }}
+      </div>
+    </div>
+  </div>
+</div>
+<app-quiz-nav
+  [modeType]="questionType"
+  (previous)="previous()"
+  (next)="next()"
+  (submit)="submit()"
+  [firstQuestion]="firstQuestion"
+  [lastQuestion]="lastQuestion"
+></app-quiz-nav>
+<app-options
+  *ngIf="questionType == 'maq'"
+  type="maq"
+  [options]="showQuestion.options"
+  [quizForm]="quizForm"
+  [questionNumber]="questionIndex"
+></app-options>
+<app-options
+  *ngIf="questionType == 'truefalse'"
+  type="truefalse"
+  [options]="showQuestion.options"
+  [quizForm]="quizForm"
+  [questionNumber]="questionIndex"
+></app-options>
+<app-options
+  *ngIf="questionType == 'mcq'"
+  type="mcq"
+  [options]="showQuestion.options"
+  [quizForm]="quizForm"
+  [questionNumber]="questionIndex"
+></app-options>
+<app-editor
+  *ngIf="questionType == 'coding'"
+  (customRun)="customrun($event)"
+  [outputbox]="output"
+  [quizForm]="quizForm"
+  [questionNumber]="questionIndex"
+></app-editor>
+
+<ng-template #resultModal let-modal>
+  <app-result-page
+    [resultData]="resultData"
+    (emitNextPage)="nextPage()"
+  ></app-result-page>
+</ng-template>

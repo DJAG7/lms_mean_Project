@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-lms-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: deploy-lms-frontend
+  template:
+    metadata:
+      labels:
+        app: deploy-lms-frontend
+    spec:
+      containers:
+      - name: deploy-lms-frontend
+        image: "ankuronlyme/capstone_frontend"
+        
+        ports:
+        - containerPort: 4200

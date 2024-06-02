@@ -1,0 +1,80 @@
+const getCourseDetails = async (req, res) => {
+    // console.log(req.headers);
+    var data = await course.findOne({ _id: req.headers.crsid });
+    var data1 = await teacher.findOne({ email: data.courseInstructor });
+    // console.log(data1);
+    var rats = await reviews.findOne({ course: req.headers.crsid });
+    res.send([data, data1, rats]);
+  };
+
+
+  const getCourseDetails = async (req, res) => {
+    // console.log(req.headers);
+    var data = await course.findOne({ _id: req.headers.crsid });
+    var data1 = await teacher.findOne({ email: data.courseInstructor });
+    // console.log(data1);
+    var rats = await reviews.findOne({ course: req.headers.crsid });
+    res.send([data, data1, rats]);
+  };
+  const getDetailsOfUser = async (req, res) => {
+    var data = await studentModel.findOne({ email: req.headers.email });
+    res.send(data);
+  };
+  const buyCourse = async (req, res) => {
+    // console.log(req.body);
+    // res.send("fake")
+    var studs = await course.findOne(
+      { _id: req.body.crsid },
+      { studentsEnrolled: 1 }
+    );
+    try {
+      if (
+        studs.studentsEnrolled == undefined ||
+        studs.studentsEnrolled.indexOf(req.body.stud) < 0
+      ) {
+        console.log(req.body, 277);
+        await course.findOneAndUpdate(
+          { _id: req.body.crsid },
+          {
+            $push: {
+              studentsEnrolled: req.body.stud,
+            },
+          }
+        );
+        await studentModel.findOneAndUpdate(
+          { email: req.body.stud },
+          {
+            $push: {
+              coursesEnrolled: { course: req.body.crsid, quizPoints: {} },
+            },
+          }
+        );
+        res.send("added");
+      } else {
+        res.statusCode = 409;
+        res.send("duplicate");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const myCourses = async (req, res) => {
+    courses = [];
+    var enrolledID = (
+      await studentModel.find(
+        { email: req.headers.email },
+        { _id: 0, coursesEnrolled: 1 }
+      )
+    )[0];
+    console.log(enrolledID);
+    for (i in enrolledID.coursesEnrolled) {
+      var studCourse = await course.findOne(
+        { _id: enrolledID.coursesEnrolled[i].course },
+        { studentsEnrolled: 0 }
+      );
+      if (!courses.includes(studCourse)) courses.push(studCourse);
+      // console.log(studCourse);
+    }
+    // console.log(courses[0].modules);
+    res.send([courses, enrolledID.coursesEnrolled]);
+  };

@@ -1,0 +1,27 @@
+.lesson-card{
+    border-color: rgb(132, 122, 108);
+    border-radius: 8px;
+    background-color: #22242e;
+}
+
+.add-module{
+    margin: 0 auto;
+    font-weight: bold;
+}
+
+.form-control{
+    margin-bottom: 15px;
+}
+
+label{
+    color: rgba(162, 216, 255, 0.7);
+}
+
+input.ng-touched.ng-invalid{
+    border: red;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075), 0 0 8px red;
+}
+
+.notValidated{
+    color: red;
+}

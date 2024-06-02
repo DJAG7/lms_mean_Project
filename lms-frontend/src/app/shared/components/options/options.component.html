@@ -1,0 +1,74 @@
+<div class="container px-5">
+  <div class="ml-5 white">
+    <h1 class="f-15 fwt600 mt-3">YOUR ANSWER</h1>
+    <form
+      *ngIf="type == 'maq'"
+      [formGroup]="getOptionsFormGroup(questionNumber)"
+    >
+    <ng-container *ngFor="let option of options; let i = index">
+      <div
+        *ngIf="option"
+        class="f-13 fwt600 d-flex mt-2"
+      >
+        <input
+          class="checkbox"
+          type="checkbox"
+          [formControlName]="'option' + (i + 1)"
+          aria-label="Checkbox for following text input"
+        />
+        <span class="ml-4 mt-2">{{ option }}</span>
+        <hr />
+      </div>
+    </ng-container>
+    </form>
+    <form
+      *ngIf="type == 'truefalse'"
+      [formGroup]="getOptionsFormGroup(questionNumber)"
+    >
+      <div class="f-13 fwt600 d-flex mt-2">
+        <input
+          class="checkbox"
+          type="radio"
+          [formControlName]="'option1'"
+          value="true"
+          aria-label="Checkbox for following text input"
+        />
+        <span class="ml-4 mt-2">{{ "True" }}</span>
+      </div>
+      <div class="f-13 fwt600 d-flex mt-2">
+        <input
+          class="checkbox"
+          type="radio"
+          [formControlName]="'option1'"
+          value="false"
+          aria-label="Checkbox for following text input"
+        />
+        <span class="ml-4 mt-2">{{ "False" }}</span>
+      </div>
+    </form>
+    <form
+      *ngIf="type == 'mcq'"
+      [formGroup]="getOptionsFormGroup(questionNumber)"
+    >
+    <ng-container *ngFor="let option of options; let i = index">
+      <div
+        *ngIf="option || option===0"
+        class="f-13 fwt600 d-flex mt-2"
+      >
+        <input
+          class="checkbox"
+          type="radio"
+          [formControlName]="'option1'"
+          [value]="i+1"
+          aria-label="Checkbox for following text input"
+        />
+        <span class="ml-4 mt-2">{{ option }}</span>
+        <hr />
+      </div>
+    </ng-container>
+    </form>
+    <p *ngIf="type==='maq'" class="grey mt-4 f-13 fwt600">
+      Note: There can be multiple correct answer to this question
+    </p>
+  </div>
+</div>

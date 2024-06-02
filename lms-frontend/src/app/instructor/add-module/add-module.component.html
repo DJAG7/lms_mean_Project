@@ -1,0 +1,645 @@
+<div class="container" style="width: 80%; margin: 0 auto">
+  <div class="h2 add-module text-grey my-3">Add Module</div>
+  <div class="container">
+    <form (submit)="addModule()" id="formModule" [formGroup]="moduleForm">
+      <label class="form-label text-grey" for="module-name">Module Title *</label>
+      <input
+        type="text"
+        class="form-control form-control-lg"
+        id="module-name"
+        formControlName="name"
+      />
+      <div class="notValidated mb-2" *ngIf="moduleForm.get('name').invalid && moduleForm.get('name').touched"> Please Enter a Valid Response</div>
+      <label for="module-description">Description*</label>
+      <!-- <input type="text" class="form-control form-control-lg" id="module-description" formControlName="description" > -->
+      <quill-editor
+        [styles]="editorStyle"
+        formControlName="description"
+      ></quill-editor>
+      <div class="notValidated mb-2" *ngIf="moduleForm.get('description').invalid && moduleForm.get('description').touched"> Please Enter a Valid Response</div>
+      <div class="sections-container" cdkDropList (cdkDropListDropped)="drop($event,getFormArray(moduleForm.get('lessons')))">  
+      <div
+        formArrayName="lessons"
+        *ngFor="let line of getLessonControls(); let i = index;"
+        id="accordion-section"
+      >
+        <!-- <div [ngStyle]="i+1===getLessonControls().length?{'display': 'none'} : {'display': 'block'}"                > -->
+          <div cdkDrag>
+        <div
+          *ngIf="line.get('type').value == 'lesson'"
+          class="card lesson-card p-4 mt-4"
+        >
+          <div class="container-fluid"  id="headingLesson"
+          data-toggle="collapse"
+          [attr.data-target]="'#collapse'+i"
+          aria-expanded="false"
+          aria-controls="collapseTwo">
+            <div class="row justify-content-between">
+              <i  class="material-icons curser-drop" style="color:white" cdkDragHandle>reorder</i>
+              <div class="h3 col-10 text-grey">Lesson {{ i + 1 }}</div>
+              <div class="h3 col-1 text-grey">
+                <i
+                  *ngIf="i!=0"
+                  (click)="deleteLesson(i)"
+                  class="bi bi-trash-fill ml-auto grey f-24"
+                ></i>
+              </div>
+              <div>
+                <i class="bi bi-caret-down-fill ml-auto" style="color:white"></i>
+              </div>
+            </div>
+          </div>
+          <div   [id]="'collapse'+i"
+          class="collapse"
+          aria-labelledby="headingLesson"
+          data-parent="#accordion-section">
+          <form [formGroupName]="i">
+            <label class="form-label text-grey" for="lesson-name"
+              >Lesson Title*</label
+            >
+            <input
+              #lessonName
+              type="text"
+              class="form-control form-control-lg"
+              id="lesson-name"
+              formControlName="name"
+            />
+          <div class="notValidated mb-2" *ngIf="line.get('name').invalid && line.get('name').touched"> Please Enter a Valid Response</div>
+
+            <label for="lesson-description">Description</label>
+            <!-- <input type="text" class="form-control form-control-lg" id="lesson-description" formControlName="description" > -->
+            <quill-editor
+              #quill
+              [styles]="editorStyle"
+              placeholder="Enter Text"
+              formControlName="description"
+            ></quill-editor>
+
+            <div class="mt-3" formGroupName="content">
+              <div class="form-label text-grey">Content Type*</div>
+              <div class="ml-4">
+                <div>
+                  <input
+                    #lessonContentVideo
+                    type="radio"
+                    id="{{ 'video' + i }}"
+                    class="form-check-input"
+                    value="video"
+                    formControlName="contentType"
+                  />
+                  <label class="form-check-label" for="{{ 'video' + i }}"
+                    >Video</label
+                  >
+                </div>
+                <div>
+                  <input
+                    #lessonContentText
+                    type="radio"
+                    id="{{ 'text' + i }}"
+                    class="form-check-input"
+                    value="text"
+                    formControlName="contentType"
+                  />
+                  <label class="form-check-label" for="{{ 'text' + i }}"
+                    >Text</label
+                  >
+                </div>
+              </div>
+              <br>
+              <ng-container
+                *ngIf="line.get('content').value.contentType === 'video'"
+              >
+              <label for="contentData">Content*</label>
+              <app-upload [control]="getFormControl(line.get('content').get('contentData'))"></app-upload>
+               
+              </ng-container>
+              <ng-container
+                *ngIf="line.get('content').value.contentType === 'text'"
+              >
+                <label for="contentData">Content*</label>
+                
+                <quill-editor
+                  #quillContent
+                  [styles]="editorStyle"
+                  placeholder="Enter Text"
+                  formControlName="contentData"
+                ></quill-editor>
+              </ng-container>
+              <div class="notValidated mb-2" *ngIf="line.get('content').invalid && line.get('content').touched"> Please Enter a Valid Response</div>
+            </div>
+            <label class="mt-3">Length*</label>
+            <div class="ml-3" formGroupName="length">
+              <div class="row">
+                <input
+                  type="number"
+                  class="form-control form-control"
+                  id="hours"
+                  formControlName="hour"
+                  style="width: 25%"
+                  min="0"
+                />
+                <label class="ml-2 mt-1">Hours</label>
+                <input
+                  type="number"
+                  class="form-control form-control ml-4"
+                  id="minutes"
+                  formControlName="minutes"
+                  style="width: 25%"
+                  min="0"
+                  max="60"
+                />
+                <label class="ml-2 mt-1">Minutes</label>
+              </div>
+            </div>
+          </form>
+        </div>
+        </div>
+        <div
+          *ngIf="line.get('type').value == 'assessment' ||line.get('type').value == 'assignment' "
+          class="card lesson-card p-4 mt-4"
+        >
+          <div class="container-fluid"  id="headingSection"
+          data-toggle="collapse"
+          [attr.data-target]="'#collapse'+i"
+          aria-expanded="false"
+          aria-controls="collapseTwo">
+            <div class="row justify-content-between">
+              <i  class="material-icons curser-drop" style="color:white" cdkDragHandle>reorder</i>
+            <ng-container *ngIf="line.get('type').value == 'assessment'">
+              <div class="h3 col-10 text-grey">Assessment {{ i + 1 }}</div>
+            </ng-container>
+            <ng-container *ngIf="line.get('type').value == 'assignment'">
+                <div class="h3 col-10 text-grey">Assignment {{ i + 1 }}</div>
+              </ng-container>
+              <div class="h3 col-1 text-grey">
+                <i
+                  *ngIf="i!=0"
+                  (click)="deleteLesson(i)"
+                  class="bi bi-trash-fill ml-auto grey f-24"
+                ></i>
+              </div>
+              <div>
+                <i class="bi bi-caret-down-fill ml-auto" style="color:white"></i>
+              </div>
+            </div>
+          </div>
+          <div   [id]="'collapse'+i"
+          class="collapse"
+          aria-labelledby="headingSection"
+          data-parent="#accordion-section">
+
+          <form [formGroupName]="i">
+            <label class="form-label text-grey" for="lesson-name">
+                <ng-container *ngIf="line.get('type').value == 'assignment'">
+                    Assignment Title*
+                </ng-container>
+                <ng-container *ngIf="line.get('type').value == 'assessment'">
+                    Assessment Title*
+                </ng-container>
+              </label
+            >
+            <input
+              #lessonName
+              type="text"
+              class="form-control form-control-lg"
+              id="lesson-name"
+              formControlName="name"
+            />
+            <div class="notValidated mb-2" *ngIf="line.get('name').invalid && line.get('name').touched"> Please Enter a Valid Response</div>
+            <label for="lesson-description">Description</label>
+            <!-- <input type="text" class="form-control form-control-lg" id="lesson-description" formControlName="description" > -->
+            <quill-editor
+              #quill
+              [styles]="editorStyle"
+              placeholder="Enter Text"
+              formControlName="description"
+            ></quill-editor>
+
+            <ng-container *ngIf="line.get('type').value == 'assessment'">
+            <div class="ml-3 mt-3" formGroupName="length">
+              <label>Length*</label>
+              <div class="row">
+                <input
+                  type="number"
+                  class="form-control form-control"
+                  id="hours"
+                  formControlName="hour"
+                  style="width: 25%"
+                />
+                <label class="ml-2 mt-1">Hours</label>
+                <input
+                  type="number"
+                  class="form-control form-control ml-4"
+                  id="minutes"
+                  formControlName="minutes"
+                  style="width: 25%"
+                />
+                <label class="ml-2 mt-1">Minutes</label>
+              </div>
+            </div>
+        </ng-container>
+            <div class="ml-3">
+              <div class="h-5 text-grey">Questions</div>
+              <div class="questions-container" cdkDropList (cdkDropListDropped)="drop($event,getFormArray(line.get('questions')))">  
+              <div
+                formArrayName="questions"
+                *ngFor="
+                  let queCtrls of getQuestionsControls(line);
+                  let j = index
+                "
+                id="accordion-question"  
+              >
+                <div cdkDrag class="card lesson-card p-4 mt-4">
+                    <div class="container-fluid" id="headingQuestion"
+                    data-toggle="collapse"
+                    [attr.data-target]="'#collapse-question-'+i+j"
+                    aria-expanded="false"
+                    aria-controls="collapseTwo">
+                        <div class="row justify-content-between">
+                          <div class="col-1">
+                            <i  class="material-icons curser-drop" style="color:white" cdkDragHandle>reorder</i>
+                          </div>
+                          <div class="col-8 h4 text-grey">Question {{ j + 1 }}</div>
+                          <div class="col-1 text-grey">
+                            <i
+                            *ngIf="j!=0"
+                              (click)="deleteQuestion(line,j)"
+                              class="bi bi-trash-fill ml-auto grey f-24"
+                            ></i>
+                          </div>
+                          <div class="col-1">
+                            <i class="bi bi-caret-down-fill ml-auto" style="color:white"></i>
+                          </div>
+                        </div>
+                      </div>
+                      <div  [id]="'collapse-question-'+i+j"
+                      class="collapse"
+                      aria-labelledby="headingQuestion"
+                      data-parent="#accordion-question">
+                  <form [formGroupName]="j">
+                    <div class="form-label text-grey">Question Type*</div>
+                    <div class="ml-4 mb-4">
+                      <div>
+                        <input
+                          type="radio"
+                          id="{{ 'maq' + i+j }}"
+                          class="form-check-input"
+                          value="maq"
+                          formControlName="queType"
+                          (change)="questionValidationsChange(queCtrls)"
+                        />
+                        <label class="form-check-label" for="{{ 'maq' + i+j }}"
+                          >MAQ</label
+                        >
+                      </div>
+                      <div>
+                        <input
+                          type="radio"
+                          id="{{ 'mcq' + i+j }}"
+                          class="form-check-input"
+                          value="mcq"
+                          formControlName="queType"
+                          (change)="questionValidationsChange(queCtrls)"
+                        />
+                        <label class="form-check-label" for="{{ 'mcq' + i+j }}"
+                          >MCQ</label
+                        >
+                      </div>
+                      <div>
+                        <input
+                          type="radio"
+                          id="{{ 'coding' + i+j }}"
+                          class="form-check-input"
+                          value="coding"
+                          formControlName="queType"
+                          (change)="questionValidationsChange(queCtrls)"
+                        />
+                        <label class="form-check-label" for="{{ 'coding' + i +j}}"
+                          >Coding</label
+                        >
+                      </div>
+                      <div>
+                        <input
+                          type="radio"
+                          id="{{ 'truefalse' + i+j }}"
+                          class="form-check-input"
+                          value="truefalse"
+                          formControlName="queType"
+                          (change)="questionValidationsChange(queCtrls)"
+                        />
+                        <label class="form-check-label" for="{{ 'truefalse'+ i+j }}"
+                          >True / False</label
+                        >
+                        
+                      </div>
+                    </div>
+                    <label class="form-label" for="">Question Name*</label>
+                    <input
+                      type="text"
+                      class="form-control form-control-lg"
+                      formControlName="questionTitle"
+                    />
+                    <div class="notValidated mb-2" *ngIf="queCtrls.get('questionTitle').invalid && queCtrls.get('questionTitle').touched"> Please Enter a Valid Response</div>
+                    <label class="form-label" for="">Question Description</label>
+                    <textarea
+                      class="form-control form-control"
+                      formControlName="questionDescripton"
+                      rows="3"
+                    >
+                    </textarea>
+                    <ng-container 
+                    *ngIf="queCtrls.get('queType').value === 'coding'">
+                        <label class="form-label" for="">Test Cases*</label> <span class="font-grey ml-3"><a href="https://xyz332211.s3.ap-south-1.amazonaws.com/Book2.xlsx">(Click here to see Sample File)</a></span>
+                        <app-upload [control]="getFormControl(queCtrls.get('inputTestCases'))"></app-upload>
+                        <div class="notValidated mb-2" *ngIf="queCtrls.get('inputTestCases').invalid && queCtrls.get('inputTestCases').touched"> Please Enter a Valid Response</div>
+                        <!-- <input
+                        type="text"
+                        class="form-control form-control-lg"
+                        formControlName="inputTestCases"
+                        /> -->
+                        <!-- <label class="form-label" for="">Output Test Cases</label>
+                        <app-upload [control]="getFormControl(queCtrls.get('outputTestCases'))"></app-upload> -->
+                        <!-- <input
+                        type="text"
+                        class="form-control form-control-lg"
+                        formControlName="outputTestCases"
+                        /> -->
+                    </ng-container>
+                    <ng-container 
+                    *ngIf="queCtrls.get('queType').value === 'maq'">
+                        <label class="form-label" for="">Option 1*</label>
+                        <input
+                        type="text"
+                        class="form-control form-control-lg"
+                        formControlName="option1"
+                        />
+                        <div class="notValidated mb-2" *ngIf="queCtrls.get('option1').invalid && queCtrls.get('option1').touched"> Please Enter a Valid Response</div>
+                        <div class="ml-4 mb-3">
+                            <input
+                              type="checkbox"
+                              id="{{ 'opt1' + i+j }}"
+                              class="form-check-input"
+                              [value]="true"
+                              formControlName="option1Correct"
+                            />
+                            <label class="form-check-label" for="{{ 'opt1' + i+j }}"
+                              >is option 1 correct?*</label
+                            >
+                          </div>
+                        <label class="form-label" for="">Option 2*</label>
+                        <input
+                        type="text"
+                        class="form-control form-control-lg"
+                        formControlName="option2"
+                        />
+                        <div class="notValidated mb-2" *ngIf="queCtrls.get('option2').invalid && queCtrls.get('option2').touched"> Please Enter a Valid Response</div>
+                        <div class="ml-4 mb-3">
+                            <input
+                              type="checkbox"
+                              id="{{ 'opt2' + i+j }}"
+                              class="form-check-input"
+                              [value]="true"
+                              formControlName="option2Correct"
+                            />
+                            <label class="form-check-label" for="{{ 'opt2' + i+j }}"
+                              >is option 2 correct?*</label
+                            >
+                          </div>
+                        <label class="form-label" for="">Option 3*</label>
+                        <input
+                        type="text"
+                        class="form-control form-control-lg"
+                        formControlName="option3"
+                        />
+                        <div class="notValidated mb-2" *ngIf="queCtrls.get('option3').invalid && queCtrls.get('option3').touched"> Please Enter a Valid Response</div>
+                        <div class="ml-4 mb-3">
+                            <input
+                              type="checkbox"
+                              id="{{ 'opt3' + i+j }}"
+                              class="form-check-input"
+                              [value]="true"
+                              formControlName="option3Correct"
+                            />
+                            <label class="form-check-label" for="{{ 'opt3' + i+j }}"
+                              >is option 3 correct?*</label
+                            >
+                          </div>
+                        <label class="form-label" for="">Option 4*</label>
+                        <input
+                        type="text"
+                        class="form-control form-control-lg"
+                        formControlName="option4"
+                        />
+                        <div class="notValidated mb-2" *ngIf="queCtrls.get('option4').invalid && queCtrls.get('option4').touched"> Please Enter a Valid Response</div>
+                        <div class="ml-4">
+                            <input
+                              type="checkbox"
+                              id="{{ 'opt4' + i+j }}"
+                              class="form-check-input"
+                              [value]="true"
+                              formControlName="option4Correct"
+                            />
+                            <label class="form-check-label" for="{{ 'opt4' + i+j }}"
+                              >is option 4 correct?*</label
+                            >
+                          </div>
+                    </ng-container>
+                    <ng-container 
+                    *ngIf="queCtrls.get('queType').value === 'truefalse'">
+                    <div class="ml-4 mb-3">
+                        <!-- <input
+                          type="checkbox"
+                          id="{{ 'truefalse' + i+j }}"
+                          class="form-check-input"
+                          [value]="true"
+                          formControlName="option1Correct"
+                        />
+                        <label class="form-check-label" for="{{ 'truefalse' + i+j }}"
+                          >Select if answer is true</label
+                        > -->
+                        <div>
+                            <input
+                              type="radio"
+                              id="{{ 'true' + i+j }}"
+                              class="form-check-input"
+                              [value]="true"
+                              formControlName="option1Correct"
+                            />
+                            <label class="form-check-label" for="{{ 'true' + i+j }}"
+                              >True</label
+                            >
+                          </div>
+                          <div>
+                            <input
+                              type="radio"
+                              id="{{ 'false' + i+j }}"
+                              class="form-check-input"
+                              [value]="false"
+                              formControlName="option1Correct"
+                            />
+                            <label class="form-check-label" for="{{ 'false' + i+j }}"
+                              >False</label
+                            >
+                          </div>
+                      </div>
+                    </ng-container>
+                    <ng-container 
+                    *ngIf="queCtrls.get('queType').value === 'mcq'">
+                        <!-- <input
+                          type="checkbox"
+                          id="{{ 'truefalse' + i+j }}"
+                          class="form-check-input"
+                          [value]="true"
+                          formControlName="option1Correct"
+                        />
+                        <label class="form-check-label" for="{{ 'truefalse' + i+j }}"
+                          >Select if answer is true</label
+                        > -->
+                        <label class="form-label" for="">Option 1*</label>
+                        <input
+                        type="text"
+                        class="form-control form-control-lg"
+                        formControlName="option1"
+                        />
+                        <div class="notValidated mb-2" *ngIf="queCtrls.get('option1').invalid && queCtrls.get('option1').touched"> Please Enter a Valid Response</div>
+                        <label class="form-label" for="">Option 2*</label>
+                        <input
+                        type="text"
+                        class="form-control form-control-lg"
+                        formControlName="option2"
+                        />
+                        <div class="notValidated mb-2" *ngIf="queCtrls.get('option2').invalid && queCtrls.get('option2').touched"> Please Enter a Valid Response</div>
+                        <label class="form-label" for="">Option 3*</label>
+                        <input
+                        type="text"
+                        class="form-control form-control-lg"
+                        formControlName="option3"
+                        />
+                        <div class="notValidated mb-2" *ngIf="queCtrls.get('option3').invalid && queCtrls.get('option3').touched"> Please Enter a Valid Response</div>
+                        <label class="form-label" for="">Option 4*</label>
+                        <input
+                        type="text"
+                        class="form-control form-control-lg"
+                        formControlName="option4"
+                        />
+                        <div class="notValidated mb-2" *ngIf="queCtrls.get('option4').invalid && queCtrls.get('option4').touched"> Please Enter a Valid Response</div>
+                      <div class="form-label text-grey">Select Correct Option*</div>
+                    <div class="ml-4 mb-3">
+                        <div>
+                            <input
+                              type="radio"
+                              id="{{ 'mcq1' + i+j }}"
+                              class="form-check-input"
+                              [value]="1"
+                              formControlName="option1Correct"
+                            />
+                            <label class="form-check-label" for="{{ 'mcq1' + i+j }}"
+                              >Option 1</label
+                            >
+                          </div>
+                          <div>
+                            <input
+                              type="radio"
+                              id="{{ 'mcq2' + i+j }}"
+                              class="form-check-input"
+                              [value]="2"
+                              formControlName="option1Correct"
+                            />
+                            <label class="form-check-label" for="{{ 'mcq2' + i+j }}"
+                              >Option 2</label
+                            >
+                          </div>
+                          <div>
+                            <input
+                              type="radio"
+                              id="{{ 'mcq3' + i+j }}"
+                              class="form-check-input"
+                              [value]="3"
+                              formControlName="option1Correct"
+                            />
+                            <label class="form-check-label" for="{{ 'mcq3' + i+j }}"
+                              >Option 3</label
+                            >
+                          </div>
+                          <div>
+                            <input
+                              type="radio"
+                              id="{{ 'mcq4' + i+j }}"
+                              class="form-check-input"
+                              [value]="4"
+                              formControlName="option1Correct"
+                            />
+                            <label class="form-check-label" for="{{ 'mcq4' + i+j }}"
+                              >Option 4</label
+                            >
+                          </div>
+                          <!-- <div>
+                            <input
+                              type="radio"
+                              id="{{ 'false' + i+j }}"
+                              class="form-check-input"
+                              [value]="false"
+                              formControlName="option1Correct"
+                            />
+                            <label class="form-check-label" for="{{ 'false' + i+j }}"
+                              >False</label
+                            >
+                          </div> -->
+                      </div>
+                    </ng-container>
+                  </form>
+                    </div>
+                </div>
+              </div>
+              </div>
+              <div class="row justify-content-between m-3">
+                <button
+                  class="btn btn-outline-secondary"
+                  type="button"
+                  (click)="addQuestion(line)"
+                >
+                  Add Question
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+        </div>
+      </div>
+        <!-- </div> -->
+      </div>
+      </div>
+    </form>
+    <div class="container ml-2">
+      <div class="row justify-content-between m-3">
+        <button class="btn btn-outline-secondary" (click)="addLesson()">
+          Add Lesson
+        </button>
+        <button
+          class="btn btn-outline-secondary"
+          data-toggle="tooltip"
+          title="Add assessment"
+          (click)="addQuiz('assessment')"
+        >
+          Add Assessment
+        </button>
+        <button
+          class="btn btn-outline-secondary"
+          data-toggle="tooltip"
+          title="Add assignment"
+          (click)="addQuiz('assignment')"
+        >
+          Add Assignment
+        </button>
+        <button
+          form="formModule"
+          type="submit"
+          class="btn btn-success"
+          [disabled]="moduleForm.invalid"
+        >
+          Add Module
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

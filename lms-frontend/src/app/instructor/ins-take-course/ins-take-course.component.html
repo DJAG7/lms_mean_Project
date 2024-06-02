@@ -1,0 +1,27 @@
+<div class="bg-primary">
+    <div class="container p-3">
+      <div class="row">
+        <div class="col-12 mt-5">
+          <div class="d-flex">
+            <h1 class="white fwt600 f-64">{{course.name}}</h1>
+          </div>
+        </div>
+        <div class="col-8 low-grey fwt600 f-22 mt-4"  [innerHTML]="course.description">
+        </div>
+        
+      </div>
+      <!-- <a class="btn btn-light mt-4 fwt600 f-13 mb-5">RESUME LESSON</a> -->
+      <button (click)="editCourse()" class="btn btn-light mt-4 fwt600 grey f-13 mb-5 mr-4"><i class="bi bi-pencil"></i> Edit Course</button>
+      <button (click)="deleteCourse()" class="btn btn-danger mt-4 fwt600 f-13 mb-5">Delete Course</button>
+    </div>
+  </div>
+  <div class="container">
+  <div class="row">
+    <div class="col-8">
+      <app-course-timeline [moduleData]="courseModules"></app-course-timeline>
+    </div>
+  </div>  
+  </div>
+  <!-- <app-timeline [courseModules]="courseModules" [moduleData]="course.modules" [courseid]="courseid" [enrolledCourseModuleMappings]="enrolledCourseModuleMappings" ></app-timeline> -->
+  
+  

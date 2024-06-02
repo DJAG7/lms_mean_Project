@@ -1,0 +1,132 @@
+<div class="row" *ngIf="!isEditable">
+  <div class="col-lg-12 ml-5">
+    <!-- Timeline -->
+    <ul class="timeline">
+      <ng-container *ngFor="let module of moduleData;let i=index">
+      <li class="timeline-item white rounded ml-3 p-4 shadow">
+        <div class="timeline-arrow"></div>
+        <div class="container-fluid">
+          <div class="row justify-content-between">
+            <div class="col"> 
+              <h2 class="h5 mb-0">{{module?.name}}</h2> 
+            </div>
+            <div *ngIf="isEditable" class="col-1">
+              <button (click)="editModule(i)" class="btn btn-outline-secondary">
+                <i class="bi bi-pencil"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div [innerHTML]="module?.description">
+        </div>
+
+        <div id="accordion">
+          <div class="card exp-card dark">
+            <div
+              class="card-header"
+              id="headingTwo"
+              data-toggle="collapse"
+              [attr.data-target]="'#collapse'+i"
+              aria-expanded="false"
+              aria-controls="collapseTwo"
+            >
+              <h5 class="mb-0 d-flex">
+                <p class="m-0 p-0">{{module?.lessons?.length}} Lessons</p>
+                <i class="bi bi-caret-down-fill ml-auto"></i>
+              </h5>
+            </div>
+            <div
+              [id]="'collapse'+i"
+              class="collapse"
+              aria-labelledby="headingTwo"
+              data-parent="#accordion"
+            >
+              <div class="card-body">
+                <ul class="list-group">
+                  <ng-container *ngFor="let contentData of module?.lessons;let j=index">
+                    <li class="list-group-item dark d-flex">
+                      <a><p class="m-0 p-0">{{contentData?.name}}</p></a>
+                       <p class="ml-auto m-0 p-0">{{contentData['length'].hour}}hr:{{contentData['length'].minutes}}m</p>
+                    </li>
+                  </ng-container>
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </li>
+    </ng-container>
+    </ul>
+    <!-- End -->
+  </div>
+</div>
+<div class="row" *ngIf="isEditable">
+  <div class="col-lg-12 ml-5">
+    <!-- Timeline -->
+    <ul class="timeline">
+      <div class="sections-container" cdkDropList (cdkDropListDropped)="drop($event)">  
+      <ng-container *ngFor="let module of moduleData;let i=index">
+        <div cdkDrag>
+      <li class="timeline-item white rounded ml-3 p-4 shadow" >
+        <div class="timeline-arrow"></div>
+        <!-- <div class="timeline-arrow" cdkDragHandle></div> -->
+        <div class="container-fluid">
+          <div class="row justify-content-between">
+            <i  class="material-icons curser-drop" style="color:white" cdkDragHandle>reorder</i>
+            <div class="col"> 
+              <h2 class="h5 mb-0">{{module?.name}}</h2> 
+            </div>
+            <div *ngIf="isEditable" class="col-1">
+              <button (click)="editModule(i)" class="btn btn-outline-secondary">
+                <i class="bi bi-pencil"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div [innerHTML]="module?.description">
+        </div>
+
+        <div id="accordion">
+          <div class="card exp-card dark">
+            <div
+              class="card-header"
+              id="headingTwo"
+              data-toggle="collapse"
+              [attr.data-target]="'#collapse'+i"
+              aria-expanded="false"
+              aria-controls="collapseTwo"
+            >
+              <h5 class="mb-0 d-flex">
+                <p class="m-0 p-0">{{module?.lessons?.length}} Lessons</p>
+                <i class="bi bi-caret-down-fill ml-auto"></i>
+              </h5>
+            </div>
+            <div
+              [id]="'collapse'+i"
+              class="collapse"
+              aria-labelledby="headingTwo"
+              data-parent="#accordion"
+            >
+              <div class="card-body">
+                <ul class="list-group">
+                  <ng-container *ngFor="let contentData of module?.lessons;let j=index">
+                    <li class="list-group-item dark d-flex">
+                      <a><p class="m-0 p-0">{{contentData?.name}}</p></a>
+                       <p class="ml-auto m-0 p-0">{{contentData['length'].hour}}hr:{{contentData['length'].minutes}}m</p>
+                    </li>
+                  </ng-container>
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </li>
+    </div>
+    </ng-container>
+    </div>
+    </ul>
+    <!-- End -->
+  </div>
+</div>

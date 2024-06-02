@@ -1,0 +1,42 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: judge0-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: judge0-db
+  template:
+    metadata:
+      labels:
+        app: judge0-db
+    spec:
+      containers:
+        - name: db
+          image: postgres:13.0
+          env:
+            - name: POSTGRES_DB
+              value: "judge0"
+            - name: POSTGRES_USER
+              value: "judge0"
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_PASSWORD
+          volumeMounts:
+            - name: postgres-pvc
+              mountPath: /var/lib/postgresql/data
+          resources:
+            limits:
+              cpu: "0.5"
+              memory: "512Mi"
+            requests:
+              cpu: "0.2"
+              memory: "256Mi"
+      volumes:
+        - name: postgres-pvc
+          persistentVolumeClaim:
+            claimName: postgres-pvc

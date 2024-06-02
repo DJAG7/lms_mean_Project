@@ -1,0 +1,22 @@
+.root{
+    min-width:320px;
+    max-width:440px;
+    border:2px solid #19191a ;
+    border-radius: 10px;
+}
+.card-body{
+    width: 100%;
+    display: flex;
+}
+.fit-content{
+    width:fit-content;
+}
+
+
+.data{
+    line-height: 15px;
+}
+a{
+    cursor: pointer;
+    text-decoration: none;
+}

@@ -1,0 +1,19 @@
+<div class="">
+    <div class="container p-3">
+      <div class="row">
+        <div class="col-12 mt-5">
+          <div class="d-flex">
+            <h1 class="white fwt600 f-64">{{course.name}}</h1>
+          </div>
+        </div>
+        <div class="col-8 low-grey fwt600 f-22 mt-4" [innerHTML]="course.description">
+        </div>
+        
+      </div>
+      <a *ngIf="!courseCompleted" [routerLink]="['/lessons/'+courseid+'/'+resumeModuleId+'/'+resumeLessonId]" class="btn btn-light mt-4 fwt600 f-13 mb-5">RESUME LESSON</a>
+      <button *ngIf="courseCompleted"  class="btn btn-light mt-4 fwt600 f-13 mb-5" disabled>COMPLETED</button>
+    </div>
+  </div>
+  <app-timeline [courseModules]="courseModules" [moduleData]="course.modules" [courseid]="courseid" [enrolledCourseModuleMappings]="enrolledCourseModuleMappings" ></app-timeline>
+  
+  

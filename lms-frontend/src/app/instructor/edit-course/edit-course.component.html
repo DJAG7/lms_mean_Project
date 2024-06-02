@@ -1,0 +1,79 @@
+<div class="container">
+    <div class="container">
+        <div class="h2 add-course-heading text-grey mx-2 my-3">Edit Course</div>
+        <div class="course-main">
+            <div class="container">
+        <div class="row">
+            <div class="col-8">
+                <form id="courseForm" [formGroup]="courseForm">
+                    <label class="form-label text-grey" for="course-name">Course Title*</label>
+                    <input type="text" class="form-control form-control-lg" id="course-name" formControlName="name" >
+                    <div class="notValidated mb-2" *ngIf="courseForm.get('name').invalid && courseForm.get('name').touched"> Please Enter a Valid Response</div>
+                    <label for="course-description" class="form-label text-grey">Description*</label>
+                    <!-- <input type="text" class="form-control form-control-lg" id="course-description" formControlName="description" > -->
+                    <quill-editor #quill [styles]="editorStyle" placeholder="Enter Text" formControlName="description"></quill-editor>
+                    <div class="notValidated mb-2" *ngIf="courseForm.get('description').invalid && courseForm.get('description').touched"> Please Enter a Valid Response</div>
+                    <label for="course-thumbnail" class="form-label text-grey mt-3">Thumbnail*</label>
+                    <app-upload [control]="getFormControl(courseForm.get('thumbnail'))"></app-upload>
+                    <div class="notValidated mb-2" *ngIf="courseForm.get('thumbnail').invalid && courseForm.get('thumbnail').touched"> Please Enter a Valid Response</div>
+                    <!-- <input type="text" class="form-control form-control-lg" id="course-thumbnail" formControlName="thumbnail" > -->
+                    <label for="course-trailer" class="form-label text-grey mt-3">Trailer*</label>
+                    <app-upload [control]="getFormControl(courseForm.get('trailer'))"></app-upload>
+                    <div class="notValidated mb-2" *ngIf="courseForm.get('trailer').invalid && courseForm.get('trailer').touched"> Please Enter a Valid Response</div>
+                    <!-- <input type="text" class="form-control form-control-lg" id="course-trailer" formControlName="trailer" > -->
+                </form>
+
+                <div class="h3 mt-3 text-grey">
+                    Modules
+                </div>
+                <div *ngIf="courseModules!==0;else NoModules">
+                    <app-course-timeline [(moduleData)]="courseModules" [isEditable]="true" (editClick)="goToEditPage($event)"></app-course-timeline>
+                </div>
+                    <button class="btn btn-outline-primary mb-5 float-left" (click)="addModule()">Add Module</button>
+            </div>
+            <div class="col-4">
+                <div class="card card-border-gold bgdark ">
+                    <div class="list-group bgdark" >
+                        <div class="list-group-item border-gold px-5 py-3 bgdark">
+                            <button class="btn btn-danger" [disabled]="!isFormValid()" (click)="editCourse()" style="width: 80%; margin: 0 auto;">Save Edited Course</button>
+                        </div>
+                        <!-- <a (click)="saveAsDraft()" class="px-5 bgdark list-group-item border-gold list-group-item-action pointer text-grey">Save as Draft</a> -->
+                        <a (click)="resetCourse()" class="px-5 bgdark list-group-item border-gold list-group-item-action pointer"><span class="text-danger"> Reset Course</span></a>
+                    </div>
+                </div>
+                <div class="h5 text-grey mt-5 ">Options</div>
+                <div class="card card-border-gold bgdark px-4 py-2 ">
+                    <form id="courseForm" [formGroup]="priceForm">
+                        <label class="form-label text-grey" for="course-price">Price</label>
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">&#8377;</span>
+                            <input type="number" class="form-control form-control" min="0" id="course-price" formControlName="price" >
+                        </div>
+                        <div class="notValidated mb-2" *ngIf="priceForm.get('price').invalid && priceForm.get('price').touched"> Please Enter a Valid Response</div>
+                        <label class="form-label text-grey">Tags</label>
+                        <ng-select
+                        bindValue="label"
+                        bindLabel="label"
+                        class="select"
+                        [addTag]="true"
+                        [multiple]="true"
+                        [selectOnTab]="true"
+                        [isOpen]="false"
+                        formControlName="tags"
+                        [class.hide-arrow]="'true'">
+                        >
+                        </ng-select>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+
+<ng-template #NoModules>
+    <div class="mb-5 text-grey" style="text-align: center;">
+        No Modules Added
+    </div>
+</ng-template>

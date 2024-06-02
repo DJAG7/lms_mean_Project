@@ -1,0 +1,35 @@
+<div class="container auth mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="h3 ml-5 login text-light">Reset Password</div>
+        <div class="card px-5 py-3 bgdark">
+         
+          <label class="form-label text-grey" for="email">New Password</label>
+          <input
+            [(ngModel)]="newpassword"
+            id="email"
+            class="form form-control"
+            type="paswword"
+          />
+          <label class="form-label text-grey" for="email">Confirm Password</label>
+          <input
+            type="password"
+            [(ngModel)]="confirmpassword"
+            id="confirmpassword"
+            class="form form-control"
+          />
+         <div class="mt-5" style="text-align: center">
+            <button
+              [disabled]="!confirmpassword || !newpassword || newpassword!=confirmpassword"
+              (click)="reset()"
+              class="btn btn-primary"
+            >
+              Reset
+            </button>
+            <br />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

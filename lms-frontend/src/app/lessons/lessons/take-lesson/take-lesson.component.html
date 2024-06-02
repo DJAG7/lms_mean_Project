@@ -1,0 +1,94 @@
+<div class="">
+  <app-subheader
+    [typeOfHeader]="'lesson'"
+    [lessonCompleted]="lessonCompleted"
+    (nextLesson)="handleNextLesson()"
+    (previousLesson)="handlePreviousLesson()"
+    (markCompleted)="completed()"
+    [course]="course"
+  ></app-subheader>
+  <button class="btn btn-primary code-btn" (click)="toggleCodeEditor()">
+    <i class="bi bi-caret-left-fill" *ngIf="!showEditor"></i> CODE
+    <i *ngIf="showEditor" class="bi bi-caret-right-fill"></i>
+  </button>
+  <div class="container p-5 mt-5">
+    <div class="row">
+      <div *ngIf="lesson" [ngClass]="showEditor ? 'col-7' : 'col-12'" class="">
+        <!-- <iframe
+          class="mx-auto video"
+          width="100%"
+          [src]="photoURL(lesson.content.contentData)"
+        >
+        </iframe> -->
+        <video
+          *ngIf="lesson.content.contentType == 'video'"
+          width="100%"
+          class="video"
+          [src]="lesson.content.contentData"
+          controls
+        ></video>
+
+        <!-- <video class="mx-auto" width="100%" controls>
+          <source  [src]="lesson.content.contentData" type="video/mp4" />
+
+          Your browser does not support the video tag.
+        </video> -->
+      </div>
+
+      <div [ngClass]="showEditor ? 'col-7' : 'col-12'" class="mt-5">
+        <div class="d-flex">
+          <h1 class="white fwt600 f-45">{{ lesson?.name }}</h1>
+          <h1 class="low-grey fwt600 f-45 ml-auto">
+            {{lesson?.['length']?.hour <= 9? '0'+lesson?.['length']?.hour : lesson?.['length']?.hour
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            }}:{{lesson?.['length']?.minutes <= 9? '0'+lesson?.['length']?.minutes:lesson?.['length']?.minutes}}
+          </h1>
+        </div>
+      </div>
+      <div [ngClass]="showEditor ? 'col-7' : 'col-12'" class="mt-4">
+        <h1 class="white fwt600 f-24">Description</h1>
+      </div>
+
+      <div
+        class="col-8 low-grey fwt600 f-22"
+        [innerHTML]="lesson?.description"
+      ></div>
+      <div
+        [ngClass]="showEditor ? 'col-7' : 'col-12'"
+        class="low-grey fwt600 f-22 mt-4"
+      >
+        <p
+          *ngIf="lesson.content.contentType == 'text'"
+          [innerHTML]="lesson.content.contentData"
+        ></p>
+      </div>
+      <div class="col-5">
+        <app-right-sidebar
+          [sidebarShow]="showEditor"
+          (sidebarShowChange)="toggleCodeEditor()"
+        ></app-right-sidebar>
+      </div>
+    </div>
+    <button
+      class="btn btn-light mt-2 fwt600 f-13"
+      (click)="completed()"
+      [disabled]="lessonCompleted"
+    >
+      {{ lessonCompleted ? "COMPLETED" : "MARK AS COMPLETED" }}
+    </button>
+  </div>
+</div>

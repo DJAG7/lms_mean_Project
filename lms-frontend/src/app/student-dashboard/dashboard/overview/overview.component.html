@@ -1,0 +1,17 @@
+<div class="container-fluid">
+  <div class="row justify-content-around">
+    <div class="col-sm-5 card darkbg">
+      <div class="head mb-3">
+        <p class="white f-16 fwt600 p-0 mt-2">Courses Difficulty</p>
+      </div>
+      <div echarts [options]="pieOptions" class="pie-chart"></div>
+    </div>
+    <div class="col-sm-5 card darkbg">
+        <div class="head mb-3">
+          <p class="white f-16 fwt600 p-0 mt-2">Experience Earned</p>
+        
+        </div>
+        <div echarts [options]="lineOptions" class="line-chart"></div>
+      </div>
+  </div>
+</div>

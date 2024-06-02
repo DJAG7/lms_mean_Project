@@ -1,0 +1,199 @@
+<div class="container-fluid ml-5">
+  <div class="row mt-3 justify-content-center">
+    <div class="col-4 white head">
+      <div>
+        <h1>{{ data?.studentId?.name }}</h1>
+        <h4>{{ data?.studentId?.email }}</h4>
+        <h4>
+          <i class="bi bi-clipboard2-data mr-3"></i>Report for
+          {{ testData.name }}
+        </h4>
+        <h4><i class="bi bi-clock"></i> {{ data.startTime | date }}</h4>
+      </div>
+    </div>
+    <div class="col-8">
+      <div class="card cardbg white">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-6 col-12">
+              <div class="stats-item">
+                <div class="icon-center">
+                  <i class="bi bi-clock icon"></i>
+                </div>
+                <div class="ml-3 pt-2 w-100">
+                  <h4>{{ resultData?.timeTaken }} min</h4>
+                  <p>Time taken for completion</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-12">
+              <div class="stats-item">
+                <div class="icon-center">
+                  <i class="bi bi-bullseye icon"></i>
+                </div>
+                <div class="ml-3 pt-2 w-100">
+                  <h4>{{ resultData.totalCorrect }}</h4>
+                  <p>Correct Answers</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-12">
+              <div class="stats-item">
+                <div class="icon-center">
+                  <i class="bi bi-clipboard-data icon"></i>
+                </div>
+                <div class="ml-3 pt-2 w-100">
+                  <h4>90%</h4>
+                  <p>scored out of 100</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-12">
+              <div class="stats-item">
+                <div class="icon-center">
+                  <i class="bi bi-file-spreadsheet icon"></i>
+                </div>
+                <div class="ml-3 pt-2 w-100">
+                  <h4>
+                    {{ resultData.totalQuestions - resultData.totalCorrect }}
+                  </h4>
+                  <p>Incorrect</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <h1 class="white">Performance Insights</h1>
+      <div class="card cardbg white">
+        <div class="container">
+          <app-result-page
+            [history]="true"
+            [showHeader]="false"
+            [showFooter]="false"
+            [resultData]="resultData"
+          ></app-result-page>
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <h1 class="white">Solutions</h1>
+      <div class="card cardbg white">
+        <div class="container p-5">
+          <div *ngFor="let section of sections; let i = index" class="row">
+            <h2 class="mt-5">{{ section.name }}</h2>
+            <div *ngFor="let question of section.questions; let j = index">
+              <div class="container p-5 pt-none">
+                <div class="row">
+                  <div class="col-8">
+                    <ng-container
+                      *ngIf="question.questionTitleType !== 'photo'"
+                    >
+                      <div class="d-flex">
+                        <h1 class="white fwt600 f-24">
+                          {{ question.questionTitle }}
+                        </h1>
+                      </div>
+                    </ng-container>
+                    <!-- <h1 class="white fwt600 f-45">AAAAA</h1> -->
+                    <div
+                      *ngIf="question.questionTitleType == 'photo'"
+                      class="low-grey fwt600 f-16 imgque"
+                    >
+                      <img
+                        _ngcontent-mwf-c6=""
+                        alt=""
+                        class="card-img-top"
+                        [src]="question.questionTitle"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    *ngIf="!checkHTML(question.questionDescripton)"
+                    class="col-8 low-grey fwt600 f-16"
+                  >
+                    {{ question.questionDescripton }}
+                  </div>
+                  <div
+                    *ngIf="checkHTML(question.questionDescripton)"
+                    class="col-8 low-grey fwt600 f-16"
+                  >
+                    <div [innerHTML]="question.questionDescripton"></div>
+                  </div>
+                  <div class="col-12">
+                    <app-options
+                      *ngIf="question.queType == 'maq'"
+                      type="maq"
+                      [options]="question.options"
+                      [quizForm]="getsectionForm(i)"
+                      [questionNumber]="j"
+                    ></app-options>
+                    <app-options
+                      *ngIf="question.queType == 'truefalse'"
+                      type="truefalse"
+                      [options]="question.options"
+                      [quizForm]="getsectionForm(i)"
+                      [questionNumber]="j"
+                    ></app-options>
+                    <app-options
+                      *ngIf="question.queType == 'mcq'"
+                      type="mcq"
+                      [options]="question.options"
+                      [quizForm]="getsectionForm(i)"
+                      [questionNumber]="j"
+                    ></app-options>
+                  </div>
+                </div>
+              </div>
+
+              <app-report-editor
+                *ngIf="question.queType == 'coding'"
+                [showOnlyCode]="true"
+                [code]="getCode(i, j)"
+              ></app-report-editor>
+              <!-- <app-sample-tests class="mt-3" *ngIf="true"></app-sample-tests> -->
+              <div
+                *ngIf="question.queType != 'coding'"
+                class="white correct-answers px-5 mx-5 mt-4"
+              >
+                Correct Options is/are: <span> {{ getCorrect(i, j) }} </span>
+              </div>
+              <div *ngIf="question.queType == 'coding'">
+                <div
+                  class="d-flex mt-5"
+                  *ngFor="let item of question.inputTestCases; let k = index"
+                >
+                  <div>
+                    <p>{{ "Input " + k }}</p>
+                    <textarea
+                      id="input"
+                      class="form-control"
+                      name="input"
+                      class="form-control"
+                      style="height: 100%"
+                      [value]="item[0]"
+                      disabled
+                    ></textarea>
+                  </div>
+                  <div>
+                    <p>{{ "Expected Output " + k }}</p>
+                    <textarea
+                      id="output"
+                      class="form-control ml-3"
+                      name="output"
+                      style="height: 100%"
+                      [value]="item[1]"
+                      disabled
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

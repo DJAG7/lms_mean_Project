@@ -1,0 +1,17 @@
+.pie-chart {
+  height: 15rem;
+}
+.line-chart {
+  height: 15rem;
+}
+.ruler {
+  color: #19191a;
+  min-width: 16rem;
+  border: 1px solid;
+}
+.darkbg{
+  background-color: #22242e;
+}
+.head{
+  border-bottom: 1px solid #dfe2e6;
+}

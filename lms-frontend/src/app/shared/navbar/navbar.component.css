@@ -1,0 +1,29 @@
+.navbar {
+  background: #1d1e26;
+  border-bottom: 1px solid #000;
+  position: sticky;
+  top: 0;
+  z-index: 3;
+}
+.navbar-icon {
+  font-size: 30px;
+}
+.profile-icon {
+  font-size: 25px;
+}
+.circle {
+  border-radius: 100%;
+  width: 41px;
+  height: 41px;
+}
+.dropdown-menu {
+  position: absolute;
+}
+
+a {
+  text-decoration: none;
+  color: white;
+}
+a:hover {
+  text-shadow: #fff;
+}

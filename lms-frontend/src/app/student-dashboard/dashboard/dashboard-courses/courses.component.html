@@ -1,0 +1,28 @@
+<section class="">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div id="carouselExampleIndicators2" class="carousel slide" data-ride="carousel">
+
+                    <div class="carousel-inner">
+                        <ng-container *ngFor="let course of courses;let i=index">
+                            <div *ngIf="i%2==0||(i%2==1&&i==courses.length)"  [ngClass]="i == 0 ? 'active' : ''" class="carousel-item">
+                                <div class="row" >
+                                    <div  class="col-md-6 mb-3">
+                                      <app-course-card [course]="courses[i]"></app-course-card>
+                                    </div>
+                                    <div *ngIf="i+1<courses.length" class="col-md-6 mb-3">
+                                        <app-course-card [course]="courses[i+1]"></app-course-card>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                       
+                       
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

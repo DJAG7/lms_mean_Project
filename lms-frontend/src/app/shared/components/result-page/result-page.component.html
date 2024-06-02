@@ -1,0 +1,46 @@
+<div class="modal-header cardbg text-white" *ngIf="showHeader">
+  <h4 class="modal-title" id="modal-basic-title">Successfully Completed</h4>
+</div>
+<div class="modal-body cardbg text-white">
+  <div
+    *ngIf="resultData?.sectionwiseScore?.categories?.length"
+    echarts
+    [options]="verticalBarOption"
+    class="bar-chart"
+  ></div>
+  <div echarts [options]="horizontalBarOption" class="bar-chart"></div>
+  <div
+    *ngIf="
+      !history &&
+      resultData?.pointsEarned?.maxPoints != 0 &&
+      resultData?.pointsEarned?.points != 0
+    "
+    echarts
+    [options]="gaugeOption"
+    class="gauge"
+  ></div>
+  <div class="d-flex">
+    <h5>
+      Score :
+      {{
+        (resultData?.totalCorrect / resultData?.totalQuestions) * 100 | floor
+      }}%
+    </h5>
+  </div>
+  <p class="fwt-600 f-11">
+    Note :- For coding Questions score can be in range 0.0 to 1.0 (ex:- 0.5)
+  </p>
+</div>
+<div class="modal-footer cardbg text-white" *ngIf="showFooter">
+  <button
+    type="button"
+    class="btn btn-outline-light"
+    (click)="goToReviewPage()"
+    *ngIf="resultData?.test?.testType !== 'grand' && !hideReview"
+  >
+    Review
+  </button>
+  <button type="button" class="btn btn-outline-light" (click)="nextPage()">
+    {{ history ? "Close" : "Next" }}
+  </button>
+</div>

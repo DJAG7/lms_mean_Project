@@ -1,0 +1,28 @@
+.root{
+    max-width: 250px;
+    border: none;
+}
+.card-body{
+    line-height: 10px;
+}
+.card-title{
+    width:130px;
+    flex-wrap: wrap;
+}
+.card-sub{
+    width:170px;
+    flex-wrap: wrap;
+}
+.card-img-top{
+    height:170px;
+}
+a{
+    text-decoration: none;
+}
+
+.ins-name{
+    width: 80%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    }

@@ -1,0 +1,40 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: judge0-workers
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: judge0-workers
+  template:
+    metadata:
+      labels:
+        app: judge0-workers
+    spec:
+      containers:
+        - name: workers
+          image: judge0/judge0:1.13.0
+          command: ["./scripts/workers"]
+          volumeMounts:
+            - name: judge0-config-volume
+              mountPath: /judge0.conf
+              subPath: judge0.conf
+            - name: privileged
+              mountPath: /dev/kvm
+          securityContext:
+            privileged: true
+          resources:
+            limits:
+              cpu: "0.5"
+              memory: "512Mi"
+            requests:
+              cpu: "0.2"
+              memory: "256Mi"
+      volumes:
+        - name: judge0-config-volume
+          configMap:
+            name: judge0-config
+        - name: privileged
+          emptyDir: {}

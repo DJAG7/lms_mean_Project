@@ -1,0 +1,77 @@
+<div class="container mt-3">
+  <div class="row">
+    <h4 class="white">Sample Test Cases</h4>
+    <div class="col-12">
+      <ng-container *ngIf="SampleTestsResults.length <= 0">
+        <p class="white">No Sample Tests Available for this Question</p>
+      </ng-container>
+      <ng-container *ngIf="SampleTestsResults.length">
+        <div class="container-fluid">
+          <div class="row">
+            <div
+              *ngFor="let item of SampleTestsResults; let i = index"
+              class="ml-3 d-flex"
+            >
+              <button
+                class="btn f-9 mt-3"
+                [ngClass]="item.passed ? 'btn-success' : 'btn-danger'"
+                (click)="showDetails(item)"
+              >
+                <span>
+                  <i class="bi bi-x" *ngIf="!item.passed"></i
+                  ><i class="bi bi-check" *ngIf="item.passed"></i> Test Case{{
+                    i + 1
+                  }}
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+    <div *ngIf="showTestDetails" class="col-12 flex">
+      <div class="form-group">
+        <label for="input">
+          <h5 class="white">Input</h5>
+        </label>
+
+        <textarea
+          id="input"
+          class="form-control"
+          name="input"
+          class="form-control"
+          style="height: 150px"
+          [(ngModel)]="testInput"
+        ></textarea>
+      </div>
+      <div class="form-group ml-2">
+        <label for="Output">
+          <h5 class="white">Expected Output</h5>
+        </label>
+        <textarea
+          id="onput"
+          class="form-control"
+          name="input"
+          class="form-control"
+          style="height: 150px"
+          [(ngModel)]="expectedOutput"
+          disabled
+        ></textarea>
+      </div>
+      <div class="form-group ml-2">
+        <label for="Output">
+          <h5 class="white">Output</h5>
+        </label>
+        <textarea
+          id="onput"
+          class="form-control"
+          name="input"
+          class="form-control"
+          style="height: 150px"
+          [(ngModel)]="actualOutput"
+          disabled
+        ></textarea>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-lms-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: deploy-lms-backend
+  template:
+    metadata:
+      labels:
+        app: deploy-lms-backend
+    spec:
+      containers:
+      - name: deploy-lms-backend
+        image: "ankuronlyme/capstone_backend:v1"
+        ports:
+        - containerPort: 3001

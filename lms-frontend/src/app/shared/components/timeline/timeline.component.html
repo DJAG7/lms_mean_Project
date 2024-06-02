@@ -1,0 +1,57 @@
+<div class="row">
+  <div class="col-lg-7 ml-5">
+    <!-- Timeline -->
+    <ul class="timeline">
+      <ng-container *ngFor="let module of moduleData;let i=index">
+      <li class="timeline-item white rounded ml-3 p-4 shadow">
+        <div class="timeline-arrow"></div>
+        <h2 class="h5 mb-0">{{module.name}}</h2>
+        <div [innerHTML]="module.description">
+        </div>
+
+        <div id="accordion">
+          <div class="card exp-card dark">
+            <div
+              class="card-header"
+              id="headingTwo"
+              data-toggle="collapse"
+              [attr.data-target]="'#collapse'+i"
+              aria-expanded="false"
+              aria-controls="collapseTwo"
+            >
+              <h5 class="mb-0 d-flex">
+                <p class="m-0 p-0">{{module.content.length}} Lessons</p>
+                <i class="bi bi-caret-down-fill ml-auto"></i>
+              </h5>
+            </div>
+            <div
+              [id]="'collapse'+i"
+              class="collapse"
+              aria-labelledby="headingTwo"
+              data-parent="#accordion"
+            >
+              <div class="card-body">
+                <ul class="list-group">
+                  <ng-container *ngFor="let contentData of courseModules[i].content;let j=index">
+                    <li class="list-group-item dark d-flex">
+                      <a *ngIf="contentData.type=='lesson'" [routerLink]="['/lessons/'+courseid+'/'+moduleData[i]._id+'/'+contentData.contentId]"><p class="m-0 p-0">{{contentData.name}}</p></a>
+                      <a *ngIf="contentData.type!='lesson' && !enrolledCourseModuleMappings[i].content[j].isCompleted"[routerLink]="['/quizzes/quiz/'+contentData.type+'/'+courseid+'/'+moduleData[i]._id+'/'+contentData.contentId]"><p class="m-0 p-0">{{contentData.name}}</p></a> 
+                      <span *ngIf="contentData.type!='lesson' && enrolledCourseModuleMappings[i].content[j].isCompleted"><p class="m-0 p-0">{{contentData.name}}</p></span>  
+                      <span  class="f-7 ml-1 mt-2" [ngClass]="contentData.type == 'lesson'?'text-info':'text-warning'">{{contentData.type | uppercase}}</span>
+                      <span *ngIf="enrolledCourseModuleMappings[i].content[j].isCompleted" class="f-11 ml-1 mt-1 text-success"> <i class="bi bi-check-lg"></i> </span>
+                       <p *ngIf="contentData.type=='lesson'" class="ml-auto m-0 p-0">{{contentData['length'].hour}}hr:{{contentData['length'].minutes}}m</p>
+                       <p *ngIf="contentData.type!='lesson'" class="ml-auto m-0 p-0">{{enrolledCourseModuleMappings[i].content[j].score}}/100</p>
+                    </li>
+                  </ng-container>
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </li>
+    </ng-container>
+    </ul>
+    <!-- End -->
+  </div>
+</div>

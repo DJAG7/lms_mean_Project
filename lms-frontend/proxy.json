@@ -1,0 +1,8 @@
+{
+    "/":{
+        "target":"https://api.sparrowcodinglabs.com",
+        "secure":true,
+        "changeOrigin":true,
+        "headers":{}
+    }
+}

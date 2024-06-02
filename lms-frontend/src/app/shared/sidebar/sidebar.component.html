@@ -1,0 +1,174 @@
+<a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
+  <i class="fas fa-bars"></i>
+</a>
+<nav id="sidebar" class="sidebar-wrapper">
+  <div class="sidebar-content">
+    <button class="btn btn-outline-primary mt-1" (click)="closeSideBar()">
+      <i class="bi bi-arrow-left"></i>
+    </button>
+    <div class="sidebar-search">
+      <div>
+        <div class="input-group">
+          <input
+            type="text"
+            class="form-control search-menu"
+            placeholder="Search..."
+          />
+          <div class="input-group-append">
+            <span class="input-group-text">
+              <i class="fa fa-search" aria-hidden="true"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-header mx-auto mt-4">
+      <div class="container">
+        <div class="row justidy-content-center">
+          <div class="col-12">
+            <div class="profile-pic mx-auto">
+              <img
+                class="img-responsive img-rounded"
+                style="margin-left: 2px"
+                height="75px"
+                width="78px"
+                src="../../../assets/images/profilepic.svg"
+                alt="User picture"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col-12 text-center text-light">
+            <h3 class="name" *ngIf="user?.name">{{ user.name }}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- sidebar-header  -->
+
+    <!-- sidebar-search  -->
+    <div class="sidebar-menu" *ngIf="user?.role == 'student'">
+      <ul>
+        <li class="header-menu">
+          <span>STUDENT</span>
+        </li>
+        <li class="sidebar-sub">
+          <a routerLink="">
+            <i class="fa fa-tachometer-alt"></i>
+            <span class="fwt700">
+              <i class="bi bi-person-square icons"></i>Student Dashboard</span
+            >
+            <!-- <span class="badge badge-pill badge-warning">New</span> -->
+          </a>
+        </li>
+        <li class="sidebar-sub">
+          <a routerLink="student/tests">
+            <i class=""></i>
+            <span class="fwt700">
+              <i class="bi bi-align-top icons"></i>Tests</span
+            >
+          </a>
+        </li>
+        <!-- <li class="sidebar-sub">
+          <a  routerLink="/courses">
+            <i class="fa fa-tachometer-alt"></i>
+            <span class="fwt700">
+              <i class="bi bi-bookmark-star-fill icons"></i>Take Course</span
+            >
+            
+          </a>
+        </li> -->
+        <!-- <li class="sidebar-sub">
+          <a  routerLink="/lessons">
+            <i class="fa fa-tachometer-alt"></i>
+            <span class="fwt700">
+              <i class="bi bi-book-fill icons"></i>Take Lesson</span
+            >
+          </a>
+        </li> -->
+      </ul>
+    </div>
+    <div class="sidebar-menu" *ngIf="user?.role == 'admin'">
+      <ul>
+        <li class="header-menu">
+          <span>ADMIN</span>
+        </li>
+        <li class="sidebar-sub">
+          <a routerLink="admin/courses">
+            <i class="fa fa-tachometer-alt"></i>
+            <span class="fwt700">
+              <i class="bi bi-person-square icons"></i>Courses</span
+            >
+          </a>
+        </li>
+        <li class="sidebar-sub">
+          <a routerLink="admin/tests">
+            <i class=""></i>
+            <span class="fwt700">
+              <i class="bi bi-align-top icons"></i>Tests</span
+            >
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="sidebar-menu" *ngIf="user?.role == 'instructor'">
+      <ul>
+        <li class="header-menu">
+          <span>Instructor</span>
+        </li>
+        <li class="sidebar-sub">
+          <a routerLink="instructor">
+            <i class="fa fa-tachometer-alt"></i>
+            <span class="fwt700">
+              <i class="bi bi-person-square icons"></i>Dashboard</span
+            >
+          </a>
+        </li>
+        <li class="sidebar-sub">
+          <a routerLink="instructor/tests">
+            <i class=""></i>
+            <span class="fwt700">
+              <i class="bi bi-align-top icons"></i>Tests</span
+            >
+          </a>
+        </li>
+        <li class="sidebar-sub">
+          <a routerLink="instructor/add-course">
+            <i class=""></i>
+            <span class="fwt700">
+              <i class="bi bi-plus-square-fill icons"></i>Add Course</span
+            >
+          </a>
+        </li>
+        <li class="sidebar-sub">
+          <a routerLink="instructor/add-live-class">
+            <i class=""></i>
+            <span class="fwt700">
+              <i class="bi bi-plus-square-fill icons"></i>Live Classes</span
+            >
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="sidebar-menu" *ngIf="user?.role == 'organization'">
+      <ul>
+        <li class="header-menu">
+          <span>ORGANIZATION</span>
+        </li>
+        <li class="sidebar-sub">
+          <a routerLink="organization/">
+            <i class="fa fa-tachometer-alt"></i>
+            <span class="fwt700">
+              <i class="bi bi-person-square icons"></i>All Tests</span
+            >
+          </a>
+        </li>
+      </ul>
+    </div>
+    <!-- sidebar-menu  -->
+  </div>
+  <!-- sidebar-content  -->
+</nav>
+<!-- sidebar-wrapper  -->

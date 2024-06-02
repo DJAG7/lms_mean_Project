@@ -1,0 +1,157 @@
+<!-- <div id="navSidebar" class="navsidebar">
+  <div
+    class="container-fluid mb-3"
+    *ngFor="let section of sections; let sectionindex = index"
+  >
+    <h5 class="text-white fwt600 mt-2">{{ section.name }}</h5>
+    <div class="row">
+      <div
+        *ngFor="let question of section.questions; let questionindex = index"
+        class="col-2 bg-primary border-light rounded ml-2 mb-2 item"
+        (click)="navigateQuestion(sectionindex, questionindex)"
+      >
+        <a class="fwt600">{{ questionindex + 1 }}</a>
+      </div>
+    </div>
+  </div>
+</div> -->
+<div class="main">
+  <h2 class="white">Test Review</h2>
+  <ng-container *ngIf="questionIndex != -1">
+    <div class="mt-10">
+      <div class="container p-5">
+        <div class="row">
+          <div class="col-8">
+            <ng-container *ngIf="showQuestion.questionTitleType !== 'photo'">
+              <div class="d-flex">
+                <h1 class="white fwt600 f-24">
+                  {{ showQuestion.questionTitle }}
+                </h1>
+              </div>
+            </ng-container>
+            <!-- <h1 class="white fwt600 f-45">AAAAA</h1> -->
+            <div
+              *ngIf="showQuestion.questionTitleType == 'photo'"
+              class="low-grey fwt600 f-16 imgque"
+            >
+              <img
+                _ngcontent-mwf-c6=""
+                alt=""
+                class="card-img-top"
+                [src]="showQuestion.questionTitle"
+              />
+            </div>
+          </div>
+          <div
+            *ngIf="!checkHTML(showQuestion.questionDescripton)"
+            class="col-8 low-grey fwt600 f-16"
+          >
+            {{ showQuestion.questionDescripton }}
+          </div>
+          <div
+            *ngIf="checkHTML(showQuestion.questionDescripton)"
+            class="col-8 low-grey fwt600 f-16"
+          >
+            <div [innerHTML]="showQuestion.questionDescripton"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <app-quiz-nav
+      [modeType]="questionType"
+      [isFullScreenTest]="true"
+      (previous)="previous()"
+      (next)="next()"
+      [firstQuestion]="firstQuestion"
+    ></app-quiz-nav>
+    <app-options
+      *ngIf="questionType == 'maq'"
+      type="maq"
+      [options]="showQuestion.options"
+      [quizForm]="sectionForm"
+      [questionNumber]="questionIndex"
+    ></app-options>
+    <app-options
+      *ngIf="questionType == 'truefalse'"
+      type="truefalse"
+      [options]="showQuestion.options"
+      [quizForm]="sectionForm"
+      [questionNumber]="questionIndex"
+    ></app-options>
+    <app-options
+      *ngIf="questionType == 'mcq'"
+      type="mcq"
+      [options]="showQuestion.options"
+      [quizForm]="sectionForm"
+      [questionNumber]="questionIndex"
+    ></app-options>
+    <app-editor
+      *ngIf="questionType == 'coding'"
+      [outputbox]="output"
+      [quizForm]="sectionForm"
+      [questionNumber]="questionIndex"
+    ></app-editor>
+    <div *ngIf="showCorrect" class="white correct-answers px-5 mx-5 mt-4">
+      Correct Options is/are: <span *ngFor="let ele of showCorrect"> {{ele}} </span>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="questionIndex === -1 && !lastQuestion">
+    <div class="">
+      <div class="container p-5 mt-5">
+        <div class="row">
+          <div class="col-12 mt-5">
+            <div class="d-flex">
+              <span>
+                <h1 class="white fwt600 f-45">
+                  {{ sections[sectionIndex]?.name }}
+                </h1>
+              </span>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <h1 class="white fwt600 f-24">Description</h1>
+          </div>
+
+          <div
+            class="col-8 low-grey fwt600 f-22"
+            [innerHTML]="sections[sectionIndex]?.description"
+          ></div>
+          <div class="col-12">
+            <span>
+              <button
+                class="btn btn-outline-light"
+                [disabled]="firstQuestion"
+                (click)="previous()"
+              >
+                Previous
+              </button>
+            </span>
+            <span class="ml-3">
+              <button class="btn btn-outline-primary" (click)="startSection()">
+                Continue
+              </button>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="questionIndex === -1 && lastQuestion">
+    <div class="mt-5">
+      <div class="container">
+        <div class="row">
+          <div class="col-12 mt-5">
+            <button
+              class="btn btn-outline-light"
+              [disabled]="firstQuestion"
+              (click)="previous()"
+            >
+              Previous
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

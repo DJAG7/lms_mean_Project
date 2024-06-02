@@ -1,0 +1,42 @@
+<nav class="navbar navbar-expand-lg navbar-dark root mt-0 p-0 w-100">
+  <div class="container d-flex p-0 w-100">
+    <div class="mt-0 ml-5 mt-3 d-flex w-100 px-5">
+      <i class="bi bi-sliders icons text-primary my-auto"></i>
+      <div class="ml-4 my-auto mr-auto">
+        <span
+          class="f-16 fwt700 white"
+          *ngIf="modeType == 'mcq' || modeType == 'truefalse'"
+          >Choose Correct Answer Below</span
+        >
+        <button
+          (click)="toggleCodeMode()"
+          class="btn btn-outline-primary f-16 fwt700 white"
+          *ngIf="modeType == 'coding'"
+        >
+          Code Mode
+        </button>
+      </div>
+      <div>
+        <button
+          *ngIf="!isFullScreenTest"
+          class="btn btn-outline-dark fwt-600 text-secondary"
+        >
+          Review Video
+        </button>
+        <button
+          class="btn btn-danger ml-3 fwt-600"
+          (click)="handlePrevious()"
+          [disabled]="firstQuestion"
+        >
+          Previous Question
+        </button>
+        <button
+          class="btn btn-danger ml-3 fwt-600"
+          (click)="lastQuestion ? handleSubmit() : handleNext()"
+        >
+          {{ lastQuestion ? "Submit" : "Next Question" }}
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>

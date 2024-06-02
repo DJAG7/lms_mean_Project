@@ -1,0 +1,19 @@
+.signin-header {
+  font-weight: 600;
+  text-align: center;
+}
+
+.form-control {
+  margin-bottom: 15px;
+}
+.bgdark {
+  background: #22242e;
+}
+.ng-select {
+  padding: 0;
+}
+
+.ng-select.select {
+  background-color: white;
+  border-radius: 8px;
+}

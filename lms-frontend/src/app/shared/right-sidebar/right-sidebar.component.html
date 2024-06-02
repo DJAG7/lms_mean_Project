@@ -1,0 +1,8 @@
+<div class="sidebar-slider" [class.sidebar-slide-in]="sidebarShow">
+  <div class="sidebar-content">
+    <app-editor
+      (customRun)="customrun($event)"
+      [outputbox]="output"
+    ></app-editor>
+  </div>
+</div>

@@ -1,0 +1,5 @@
+.InstructionsBody{
+    max-height: 18rem;
+    word-wrap: break-word;
+    overflow-y: auto;
+}

@@ -1,0 +1,602 @@
+<div *ngIf="access" class="container">
+  <div class="main-body">
+    <div class="row gutters-sm">
+      <div class="col-md-4 mb-3">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex flex-column align-items-center text-center">
+              <img
+                [src]="profileDetails?.profilePicture"
+                alt="Admin"
+                class="rounded-circle"
+                width="150"
+                height="150"
+                (click)="openFileInput()"
+              />
+              <input
+                type="file"
+                #fileInput
+                style="display: none"
+                (change)="handleFileInput($event)"
+              />
+              <div class="mt-3">
+                <h4 class="text-white">{{ profileDetails?.name.value }}</h4>
+                <p class="text-secondary mb-1">
+                  {{ profileDetails?.username }}
+                </p>
+
+                <div class="custom-control custom-switch">
+                  <input
+                    type="checkbox"
+                    class="custom-control-input"
+                    id="customSwitch2"
+                    [(ngModel)]="visibilitySwitch"
+                    (change)="handleVisibility($event)"
+                  />
+                  <label
+                    class="custom-control-label text-white"
+                    for="customSwitch2"
+                    >Public</label
+                  >
+                </div>
+                <div class="mt-2">
+                  <button
+                    class="btn btn-primary mr-3"
+                    (click)="handleEditProfile()"
+                    *ngIf="!editProfile"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    class="btn btn-danger mr-3"
+                    *ngIf="editProfile"
+                    (click)="cancelEditProfile()"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    class="btn btn-success"
+                    (click)="saveProfile()"
+                    *ngIf="editProfile"
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card mt-3">
+          <form [formGroup]="profileForm">
+            <ul class="list-group list-group-flush">
+              <li
+                class="github list-group-item d-flex justify-content-between align-items-center flex-wrap"
+              >
+                <h6 class="mb-0 white">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="feather feather-github mr-2 icon-inline"
+                  >
+                    <path
+                      d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"
+                    ></path></svg
+                  >Github
+                </h6>
+                <button
+                  (click)="handleGithubConnect()"
+                  *ngIf="!profileDetails?.gitHub?.givenAccess"
+                  class="btn github-btn fwt600"
+                >
+                  Connect
+                </button>
+                <button
+                  *ngIf="profileDetails?.gitHub?.givenAccess"
+                  class="btn btn-danger fwt600"
+                  (click)="removeGithubAccess()"
+                >
+                  Disconnect
+                </button>
+              </li>
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center flex-wrap text-white"
+              >
+                <h6 class="mb-0 white">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="feather feather-globe mr-2 icon-inline"
+                  >
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                    <path
+                      d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
+                    ></path></svg
+                  >Website
+                </h6>
+                <span class="text-secondary" *ngIf="!editProfile">{{
+                  profileDetails?.websiteURL?.value
+                }}</span>
+                <div
+                  class="col-sm-12 text-secondary d-flex"
+                  *ngIf="editProfile"
+                >
+                  <input
+                    class="form-control"
+                    formControlName="websiteURL"
+                    placeholder="Enter Website URL"
+                  />
+                  <div class="custom-control custom-switch ml-3">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      formControlName="websiteURL_public"
+                      id="websiteURL"
+                    />
+                    <label
+                      class="custom-control-label text-white"
+                      for="websiteURL"
+                      >Public</label
+                    >
+                  </div>
+                </div>
+              </li>
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center flex-wrap text-white"
+              >
+                <h6 class="mb-0 white">
+                  <img
+                    src="../../../assets/images/leetcode.svg"
+                    height="24"
+                    width="24"
+                    class="mr-2"
+                  />Leetcode
+                </h6>
+                <span class="text-secondary" *ngIf="!editProfile">{{
+                  profileDetails?.leetcode?.value
+                }}</span>
+                <div
+                  class="col-sm-12 text-secondary d-flex"
+                  *ngIf="editProfile"
+                >
+                  <input
+                    class="form-control"
+                    formControlName="leetcode"
+                    placeholder="username"
+                  />
+                  <div class="custom-control custom-switch ml-3">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      formControlName="leetcode_public"
+                      id="leetcode"
+                    />
+                    <label
+                      class="custom-control-label text-white"
+                      for="leetcode"
+                      >Public</label
+                    >
+                  </div>
+                </div>
+              </li>
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center flex-wrap text-white"
+              >
+                <h6 class="mb-0 white">
+                  <img
+                    src="../../../assets/images/code-forces.svg"
+                    height="24"
+                    width="24"
+                    class="mr-2"
+                  />Codeforces
+                </h6>
+                <span class="text-secondary" *ngIf="!editProfile">{{
+                  profileDetails?.codeforces?.value
+                }}</span>
+                <div
+                  class="col-sm-12 text-secondary d-flex"
+                  *ngIf="editProfile"
+                >
+                  <input
+                    class="form-control"
+                    formControlName="codeforces"
+                    placeholder="username"
+                  />
+                  <div class="custom-control custom-switch ml-3">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      formControlName="codeforces_public"
+                      id="codeforces"
+                    />
+                    <label
+                      class="custom-control-label text-white"
+                      for="codeforces"
+                      >Public</label
+                    >
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </form>
+        </div>
+        <div class="card text-white mt-3">
+          <div class="card-body">
+            <h6 class="d-flex align-items-center mb-3 card-head">
+              <i class="bi bi-code-slash mr-3 text-primary f-24"></i>Languages
+            </h6>
+            <p *ngIf="showGitDataLoading" class="text-white">Loading</p>
+            <div
+              class="languages p-3"
+              *ngIf="profileDetails?.gitHub.givenAccess"
+            >
+              <div *ngFor="let language of languages; let i = index">
+                <div class="d-flex space-between">
+                  <small>{{ language.language }}</small>
+                  <div class="f-right">{{ language.points }}pts</div>
+                  <div class="f-right">{{ language.score }}%</div>
+                </div>
+                <div class="progress mb-3" style="height: 5px">
+                  <div
+                    class="progress-bar"
+                    [ngClass]="colors[i % 6]"
+                    role="progressbar"
+                    [ngStyle]="{ width: language.score + '%' }"
+                    aria-valuenow="language.score"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                  ></div>
+                </div>
+              </div>
+            </div>
+            <div
+              *ngIf="!profileDetails?.gitHub.givenAccess"
+              class="d-flex h-100 align-items-center justify-content-center mb-3"
+            >
+              <div class="center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="48"
+                  height="48"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="feather feather-github mr-2 icon-inline"
+                >
+                  <path
+                    d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"
+                  ></path>
+                </svg>
+                <h6>Please Connect with Github to access this area.</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div class="card mb-3">
+          <form [formGroup]="profileForm">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-3">
+                  <h6 class="mb-0 text-white">Full Name</h6>
+                </div>
+                <div class="col-sm-9 text-secondary" *ngIf="!editProfile">
+                  {{ profileDetails?.name?.value }}
+                </div>
+                <div class="col-sm-9 text-secondary d-flex" *ngIf="editProfile">
+                  <input
+                    class="form-control"
+                    formControlName="name"
+                    placeholder="Enter Name"
+                  />
+                  <div class="custom-control custom-switch ml-3">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      formControlName="name_public"
+                      id="name"
+                    />
+                    <label class="custom-control-label text-white" for="name"
+                      >Public</label
+                    >
+                  </div>
+                </div>
+              </div>
+              <hr />
+              <div class="row">
+                <div class="col-sm-3">
+                  <h6 class="mb-0 text-white">Email</h6>
+                </div>
+                <div class="col-sm-9 text-secondary">
+                  {{ profileDetails?.email?.value }}
+                </div>
+              </div>
+              <hr />
+              <div class="row">
+                <div class="col-sm-3">
+                  <h6 class="mb-0 text-white">Phone</h6>
+                </div>
+                <div class="col-sm-9 text-secondary" *ngIf="!editProfile">
+                  {{ profileDetails?.phone?.value }}
+                </div>
+                <div class="col-sm-9 text-secondary d-flex" *ngIf="editProfile">
+                  <input
+                    class="form-control"
+                    formControlName="phone"
+                    placeholder="Enter Phone Number"
+                  />
+                  <div class="custom-control custom-switch ml-3">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      formControlName="phone_public"
+                      id="phone"
+                    />
+                    <label class="custom-control-label text-white" for="phone"
+                      >Public</label
+                    >
+                  </div>
+                </div>
+              </div>
+              <hr />
+              <div class="row">
+                <div class="col-sm-3">
+                  <h6 class="mb-0 text-white">Organization</h6>
+                </div>
+                <div class="col-sm-9 text-secondary" *ngIf="!editProfile">
+                  {{ profileDetails?.organization?.value }}
+                </div>
+                <div class="col-sm-9 text-secondary d-flex" *ngIf="editProfile">
+                  <ng-select
+                    class="form-control"
+                    [items]="organizationOptions"
+                    bindLabel="label"
+                    bindValue="value"
+                    formControlName="organization"
+                  >
+                  </ng-select>
+
+                  <div class="custom-control custom-switch ml-3">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      formControlName="organization_public"
+                      id="organization"
+                    />
+                    <label
+                      class="custom-control-label text-white"
+                      for="organization"
+                      >Public</label
+                    >
+                  </div>
+                </div>
+              </div>
+              <hr />
+              <div class="row mb-3">
+                <div class="col-sm-3">
+                  <h6 class="mb-0 text-white">Description</h6>
+                </div>
+                <div class="col-sm-9 text-secondary" *ngIf="!editProfile">
+                  <quill-view-html
+                    [content]="profileDetails?.description?.value"
+                    theme="snow"
+                  ></quill-view-html>
+                </div>
+                <div class="col-sm-9 text-secondary d-flex" *ngIf="editProfile">
+                  <div class="container">
+                    <quill-editor
+                      #quill
+                      [styles]="editorStyle"
+                      [modules]="modules"
+                      placeholder="Enter Text"
+                      formControlName="description"
+                    ></quill-editor>
+                  </div>
+                  <div class="custom-control custom-switch ml-3">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      formControlName="description_public"
+                      id="description"
+                    />
+                    <label
+                      class="custom-control-label text-white"
+                      for="description"
+                      >Public</label
+                    >
+                  </div>
+                </div>
+              </div>
+              <hr />
+              <div class="row txt-area">
+                <div class="col-sm-3">
+                  <h6 class="mb-0 text-white">Education</h6>
+                </div>
+                <div class="col-sm-9 text-secondary" *ngIf="!editProfile">
+                  <quill-view-html
+                    [content]="profileDetails?.education?.value"
+                    theme="snow"
+                  ></quill-view-html>
+                </div>
+                <div class="col-sm-9 text-secondary d-flex" *ngIf="editProfile">
+                  <div class="container">
+                    <quill-editor
+                      #quill
+                      [styles]="editorStyle"
+                      [modules]="modules"
+                      placeholder="Enter Text"
+                      formControlName="education"
+                    ></quill-editor>
+                  </div>
+                  <div class="custom-control custom-switch ml-3">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      formControlName="education_public"
+                      id="education"
+                    />
+                    <label
+                      class="custom-control-label text-white"
+                      for="education"
+                      >Public</label
+                    >
+                  </div>
+                </div>
+              </div>
+              <!-- <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0 text-white">Description</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                {{ profileDetails?.email }}
+              </div>
+            </div>
+            <hr /> -->
+              <!-- <div class="row">
+              <div class="col-sm-12">
+                <a
+                  class="btn btn-info"
+                  target="__blank"
+                  href="https://www.bootdey.com/snippets/view/profile-edit-data-and-skills"
+                  >Edit</a
+                >
+              </div>
+            </div> -->
+            </div>
+          </form>
+        </div>
+
+        <div class="row gutters-sm text-white">
+          <div class="col-sm-6 mb-3">
+            <div class="card h-100">
+              <div class="card-body">
+                <h6 class="d-flex align-items-center mb-3 card-head">
+                  <i class="bi bi-archive mr-3 text-primary f-24"></i>Repos
+                </h6>
+                <p *ngIf="showGitDataLoading" class="text-white">Loading</p>
+                <div class="items" *ngIf="profileDetails?.gitHub.givenAccess">
+                  <div *ngFor="let repo of repos">
+                    <small
+                      ><a class="link mt-3 f-16" [href]="repo.url">{{
+                        repo.name
+                      }}</a></small
+                    >
+                    <hr class="sep" />
+                  </div>
+                </div>
+                <div
+                  *ngIf="!profileDetails?.gitHub.givenAccess"
+                  class="d-flex h-100 align-items-center justify-content-center mb-3"
+                >
+                  <div class="center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="48"
+                      height="48"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="feather feather-github mr-2 icon-inline"
+                    >
+                      <path
+                        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"
+                      ></path>
+                    </svg>
+                    <h6>Please Connect with Github to access this area.</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 mb-3">
+            <div class="card h-100">
+              <div class="card-body">
+                <h6 class="d-flex align-items-center mb-3">
+                  <i class="bi bi-file-code text-primary mr-3 f-24"></i>Commits
+                </h6>
+                <p *ngIf="showGitDataLoading" class="text-white">Loading</p>
+                <div class="items" *ngIf="profileDetails?.gitHub.givenAccess">
+                  <div *ngFor="let commit of commits">
+                    <div>
+                      <p class="m-0">
+                        <span class="f-7">SHA:-</span
+                        ><a
+                          class="link mt-3 f-11 fwt600"
+                          [href]="commit.html_url"
+                          >{{ commit.sha }}</a
+                        >
+                      </p>
+                      <div class="container-fluid">
+                        <div class="row">
+                          <div class="col-9">
+                            <small
+                              ><a
+                                class="link mt-3 f-16"
+                                [href]="commit.repo_url"
+                                >{{ commit.repo_name }}</a
+                              ></small
+                            >
+                          </div>
+                          <div class="col-3 pr-0 d-flex f-9 align-items-center">
+                            {{ commit.date | date }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <hr class="sep" />
+                  </div>
+                </div>
+                <div
+                  *ngIf="!profileDetails?.gitHub.givenAccess"
+                  class="d-flex h-100 align-items-center justify-content-center mb-3"
+                >
+                  <div class="center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="48"
+                      height="48"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="feather feather-github mr-2 icon-inline"
+                    >
+                      <path
+                        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"
+                      ></path>
+                    </svg>
+                    <h6>Please Connect with Github to access this area.</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,14 @@
+.profile-pic{
+  border-radius: 3px;
+  height:80px;
+  width:82px;
+  background-color: #5567ff;
+}
+.icons{
+  font-size: 18px !important;
+}
+.name{
+  word-break: break-word;
+  word-wrap: break-word;
+  max-width:200px;
+}

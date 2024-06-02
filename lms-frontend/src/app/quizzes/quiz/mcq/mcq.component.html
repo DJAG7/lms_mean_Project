@@ -1,0 +1,22 @@
+
+<div class="bg-primary">
+    <app-subheader></app-subheader>
+    <div   class="container p-5 ">
+      <div class="row">
+        <div class="col-12 ">
+          <div class="d-flex">
+            <h1 class="white fwt600 f-45">{{questions[showQuestion].name}}</h1>
+            <app-timer class="ml-auto"></app-timer>
+          </div>
+        </div>
+        <div class="col-8 low-grey fwt600 f-22">
+          {{questions[showQuestion].description}}
+        </div>
+        
+      </div>
+    </div>
+</div>
+<app-quiz-nav [modeType]="'mcq'" (previous)="previous()" (next)="next()" (submit)="submit()" [firstQuestion]="firstQuestion" [lastQuestion]="lastQuestion"></app-quiz-nav>
+<app-options [options]="questions[showQuestion].options" [quizForm]="mcqForm" [questionNumber]="showQuestion"></app-options>
+  
+  

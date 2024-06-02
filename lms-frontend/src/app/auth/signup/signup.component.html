@@ -1,0 +1,30 @@
+<div class="container auth">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="h3 signin-header text-white">Sign Up</div>
+            <div class="card px-5 py-3 bgdark">
+                <div style="text-align: center;" >
+                    <button [ngClass]="selectedRole==='student'?'btn-success':'btn-secondary'" (click)="selectRole('student')" class="btn mr-3 mb-3">Student</button>
+                    <!-- <button [ngClass]="selectedRole==='instructor'?'btn-success':'btn-secondary'" (click)="selectRole('instructor')" class="btn mr-3 mb-3">Instructor</button> -->
+                    <!-- <button [ngClass]="selectedRole==='admin'?'btn-success':'btn-secondary'" (click)="selectRole('admin')" class="btn mb-3">Admin</button> -->
+                </div>
+                <label class="form-label text-grey" id="name" for="email" >Name*</label>
+                <input [(ngModel)]="name" id="name" class="form form-control" placeholder="Enter Your Name" type="text">
+                <label class="form-label text-grey" id="organization" for="email" >Organization*</label>
+                <ng-select  class="select" [items]="organizations" bindLabel="label" bindValue="value" [(ngModel)]="organization" [placeholder]="'select Organization'"></ng-select>
+                <label class="form-label text-grey" for="email">Email*</label>
+                <input [(ngModel)]="email" id="email" placeholder="Enter Your Email" class="form form-control" type="text">
+                <label class="form-label text-grey" for="password">Password*</label>
+                <input  [(ngModel)]="password" id="password" placeholder="Enter Password" class="form form-control" type="password">
+                <label class="form-label text-grey" for="conf-password">Confirm Password*</label>
+                <input  [(ngModel)]="ConfirmPassword" id="conf-password" placeholder="Re-Enter Password" class="form form-control" type="password">
+                <div class="mt-3" style="text-align: center;">
+                    <div class="" style="text-align: center;">
+                    <button [disabled]="isDisable()" (click)="signUp()" class="btn btn-primary">Sign Up</button>
+                    <br>
+                    <a routerLink="/auth/login">Already an User? Log In</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>  
