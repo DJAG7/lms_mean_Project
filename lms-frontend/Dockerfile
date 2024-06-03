@@ -5,17 +5,26 @@ FROM node:18 AS build
 WORKDIR /app
 
 # Copy package.json and package-lock.json and install dependencies
-COPY ./package*.json ./
+COPY package*.json ./
 
 # Installation of all dependencies
 RUN npm install --force
-RUN npm install -g @angular/cli 
+RUN npm install -g @angular/cli
 
-# Copy the bash script to the Docker image
-COPY modify_quill_editor.sh ./
+# Install dos2unix to convert line endings
+RUN apt-get update && apt-get install -y dos2unix
 
-# Execute the bash script to modify the quill-editor.component.d.ts file
-RUN chmod +x modify_quill_editor.sh && ./modify_quill_editor.sh
+# Copy the script into the Docker image
+COPY modify_quill_editor.sh .
+
+# Convert line endings to Unix format to remove carriage return characters
+RUN dos2unix modify_quill_editor.sh
+
+# Make the script executable
+RUN chmod +x modify_quill_editor.sh
+
+# Execute the script
+RUN ./modify_quill_editor.sh
 
 # Copy the rest of the application code
 COPY . .
