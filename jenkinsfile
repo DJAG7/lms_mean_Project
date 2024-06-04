@@ -68,7 +68,7 @@ pipeline {
         stage('Deploy to EKS') {
             steps {
                 script {
-                    dir('./compiler/k8'){
+                    dir('./compiler/k8') {
                         sh 'kubectl apply -f configmap.yaml'
                         sh 'kubectl apply -f postgres-secret.yaml'
                         sh 'kubectl apply -f postgres-pvc.yaml'
@@ -79,12 +79,17 @@ pipeline {
                         sh 'kubectl apply -f compiler_service.yaml'
                         sh 'kubectl apply -f judge0-server-deployment.yaml'
                         sh 'kubectl apply -f judge0-workers-deployment.yaml'
-                    } 
+                    }
 
-                    dir('./lms-backend'){
+                    dir('./lms-backend') {
                         sh 'kubectl apply -f backend_deployment.yaml'
                         sh 'kubectl apply -f backend_service.yaml'
-                    } 
+                    }
+
+                    dir('./lms-frontend') {
+                        sh 'kubectl apply -f frontend_deployment.yaml'
+                        sh 'kubectl apply -f frontend_service.yaml'
+                    }
 
                     withCredentials([aws(credentialsId: 'Rootawskey', region: env.AWS_REGION)]) {
                         // Delete Helm releases

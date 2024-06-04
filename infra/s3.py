@@ -12,8 +12,8 @@ def upload_tfstate_to_s3(bucket_name, local_file_path, s3_file_name):
         print(f"Error uploading file '{local_file_path}' to S3 bucket '{bucket_name}': {e}")
 
 # Replace these values with your actual bucket name, local file path, and desired S3 file name
-bucket_name = 'your_bucket_name'
-local_file_path = 'terraform.tfstate'
+bucket_name = 'capstone-eks'
+local_file_path = './terraform/terraform.tfstate'
 s3_file_name = 'terraform.tfstate'
 
 # Upload Terraform state file to S3 bucket
