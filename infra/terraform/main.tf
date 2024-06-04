@@ -21,6 +21,16 @@ resource "aws_subnet" "public" {
   }
 }
 
+# Create Private Subnet
+resource "aws_subnet" "private" {
+  vpc_id            = aws_vpc.lms_cluster.id
+  cidr_block        = "10.0.2.0/24"
+  availability_zone = "ap-south-1b"
+  tags = {
+    Name = "private-subnet"
+  }
+}
+
 # Create Internet Gateway
 resource "aws_internet_gateway" "lms_cluster_gw" {
   vpc_id = aws_vpc.lms_cluster.id
@@ -47,6 +57,7 @@ resource "aws_route_table_association" "public_subnet" {
   subnet_id      = aws_subnet.public.id
   route_table_id = aws_route_table.public.id
 }
+
 # Create EKS Cluster
 resource "aws_eks_cluster" "eks_cluster" {
   name     = var.cluster_name
@@ -55,7 +66,8 @@ resource "aws_eks_cluster" "eks_cluster" {
 
   vpc_config {
     subnet_ids = [
-      aws_subnet.public.id
+      aws_subnet.public.id,
+      aws_subnet.private.id
     ]
   }
 
@@ -119,7 +131,7 @@ resource "aws_launch_template" "main" {
               EOF
 }
 
-# Create Auto Scaling Group
+# AutoScaling Group
 resource "aws_autoscaling_group" "main" {
   desired_capacity     = 1
   max_size             = 3
