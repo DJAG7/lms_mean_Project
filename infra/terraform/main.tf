@@ -47,7 +47,6 @@ resource "aws_route_table_association" "public_subnet" {
   subnet_id      = aws_subnet.public.id
   route_table_id = aws_route_table.public.id
 }
-
 # Create EKS Cluster
 resource "aws_eks_cluster" "eks_cluster" {
   name     = var.cluster_name
@@ -55,7 +54,9 @@ resource "aws_eks_cluster" "eks_cluster" {
   version  = var.cluster_version
 
   vpc_config {
-    subnet_ids = [aws_subnet.public.id]
+    subnet_ids = [
+      aws_subnet.public.id
+    ]
   }
 
   tags = {
@@ -118,7 +119,7 @@ resource "aws_launch_template" "main" {
               EOF
 }
 
-# AutoScaling Group
+# Create Auto Scaling Group
 resource "aws_autoscaling_group" "main" {
   desired_capacity     = 1
   max_size             = 3
@@ -138,6 +139,40 @@ resource "aws_autoscaling_group" "main" {
   lifecycle {
     create_before_destroy = true
   }
+}
+
+# IAM Role for Prometheus (conditionally created)
+resource "aws_iam_role" "prometheus_role" {
+  count = length(data.aws_iam_role.prometheus_role.arn) > 0 ? 0 : 1
+
+  name = "prometheus_role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+}
+
+# Attach EC2 Read-Only Policy to Prometheus Role
+resource "aws_iam_role_policy_attachment" "prometheus_ec2_readonly_policy" {
+  count = length(data.aws_iam_role.prometheus_role.arn) > 0 ? 0 : 1
+
+  role       = aws_iam_role.prometheus_role[0].name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess"
+}
+
+# Create Instance Profile for Prometheus
+resource "aws_iam_instance_profile" "prometheus_instance_profile" {
+  name = "prometheus_instance_profile"
+  role = length(data.aws_iam_role.prometheus_role.arn) > 0 ? data.aws_iam_role.prometheus_role.name : aws_iam_role.prometheus_role[0].name
 }
 
 # Check for existing security group for Prometheus
@@ -204,21 +239,34 @@ resource "aws_security_group" "grafana_lms_security_group" {
 
 # EC2 instance for Prometheus
 resource "aws_instance" "prometheus" {
-  ami           = var.prometheus_ami
-  instance_type = var.prometheus_instance_type
-  subnet_id     = aws_subnet.public.id
+  ami                         = var.prometheus_ami
+  instance_type               = var.prometheus_instance_type
+  subnet_id                   = aws_subnet.public.id
+  associate_public_ip_address = true
+  iam_instance_profile        = aws_iam_instance_profile.prometheus_instance_profile.name
   security_groups = length(data.aws_security_group.prometheus_lms_security_group.ids) > 0 
-  ? [data.aws_security_group.prometheus_lms_security_group.ids[0]]
-  : [aws_security_group.prometheus_lms_security_group.id]
+    ? [data.aws_security_group.prometheus_lms_security_group.ids[0]]
+    : [aws_security_group.prometheus_lms_security_group.id]
 
   user_data = <<-EOF
               #!/bin/bash
               sudo yum update -y
-              sudo yum install -y wget
+              sudo yum install -y wget git
+              cd /tmp
               wget https://github.com/prometheus/prometheus/releases/download/v2.26.0/prometheus-2.26.0.linux-amd64.tar.gz
               tar xvf prometheus-2.26.0.linux-amd64.tar.gz
               cd prometheus-2.26.0.linux-amd64
-              ./prometheus --config.file=prometheus.yml &
+              sudo mv prometheus /usr/local/bin/
+              sudo mv promtool /usr/local/bin/
+              sudo mkdir -p /etc/prometheus
+              sudo git clone -b grafanapromdev https://github.com/ankuronlyme/lms_mean_project.git
+              sudo mv lms_mean_project/grafanaprometheusfiles/prometheus.yml /etc/prometheus/prometheus.yml
+
+              # Replace placeholders in prometheus.yml
+              sudo sed -i 's/YOUR REGION/$${var.region}/g' /etc/prometheus/prometheus.yml
+              sudo sed -i 's/YOUR_PROMETHEUS_ROLE_ARN/$${aws_iam_role.prometheus_role.arn}/g' /etc/prometheus/prometheus.yml
+              
+              sudo /usr/local/bin/prometheus --config.file=/etc/prometheus/prometheus.yml &
               EOF
 
   tags = {
@@ -228,12 +276,13 @@ resource "aws_instance" "prometheus" {
 
 # EC2 instance for Grafana
 resource "aws_instance" "grafana" {
-  ami           = var.grafana_ami
-  instance_type = var.grafana_instance_type
-  subnet_id     = aws_subnet.public.id
+  ami                         = var.grafana_ami
+  instance_type               = var.grafana_instance_type
+  subnet_id                   = aws_subnet.public.id
+  associate_public_ip_address = true
   security_groups = length(data.aws_security_group.grafana_lms_security_group.ids) > 0 
-  ? [data.aws_security_group.grafana_lms_security_group.ids[0]]
-  : [aws_security_group.grafana_lms_security_group.id]
+    ? [data.aws_security_group.grafana_lms_security_group.ids[0]]
+    : [aws_security_group.grafana_lms_security_group.id]
 
   user_data = <<-EOF
               #!/bin/bash
@@ -249,3 +298,6 @@ resource "aws_instance" "grafana" {
     Name = "Grafana"
   }
 }
+
+
+

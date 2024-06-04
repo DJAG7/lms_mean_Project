@@ -1,0 +1,10 @@
+scrape_configs:
+  - job_name: 'aws_ec2_instances'
+    ec2_sd_configs:
+      - region: 'YOUR REGION'
+        role_arn: 'YOUR_PROMETHEUS_ROLE_ARN'
+    relabel_configs:
+      - source_labels: [__meta_ec2_tag_Name]
+        target_label: instance
+      - source_labels: [__meta_ec2_private_ip]
+        target_label: ip
