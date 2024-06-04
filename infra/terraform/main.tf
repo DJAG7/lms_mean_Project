@@ -149,7 +149,7 @@ data "aws_security_group" "prometheus_lms_security_group" {
 }
 
 resource "aws_security_group" "prometheus_lms_security_group" {
-  count = length(data.aws_security_group.prometheus_lms_security_group.id) == 0 ? 1 : 0
+  count = length(data.aws_security_group.prometheus_lms_security_group.ids) == 0 ? 1 : 0
   vpc_id = aws_vpc.lms_cluster.id
 
   ingress {
@@ -180,7 +180,7 @@ data "aws_security_group" "grafana_lms_security_group" {
 }
 
 resource "aws_security_group" "grafana_lms_security_group" {
-  count = length(data.aws_security_group.grafana_lms_security_group.id) == 0 ? 1 : 0
+  count = length(data.aws_security_group.grafana_lms_security_group.ids) == 0 ? 1 : 0
   vpc_id = aws_vpc.lms_cluster.id
 
   ingress {
@@ -209,7 +209,7 @@ resource "aws_instance" "prometheus" {
   subnet_id     = aws_subnet.public.id
   security_groups = length(data.aws_security_group.prometheus_lms_security_group.ids) > 0 
   ? [data.aws_security_group.prometheus_lms_security_group.ids[0]]
-  : [aws_security_group.prometheus_lms_security_group.id]
+  : [aws_security_group.prometheus_lms_security_group[0].id]
 
   user_data = <<-EOF
               #!/bin/bash
@@ -233,7 +233,7 @@ resource "aws_instance" "grafana" {
   subnet_id     = aws_subnet.public.id
   security_groups = length(data.aws_security_group.grafana_lms_security_group.ids) > 0 
   ? [data.aws_security_group.grafana_lms_security_group.ids[0]]
-  : [aws_security_group.grafana_lms_security_group.id]
+  : [aws_security_group.grafana_lms_security_group[0].id]
 
   user_data = <<-EOF
               #!/bin/bash
@@ -248,4 +248,60 @@ resource "aws_instance" "grafana" {
   tags = {
     Name = "Grafana"
   }
+}
+
+# Define variables
+variable "region" {
+  description = "The AWS region to deploy the resources."
+  type        = string
+}
+
+variable "cluster_name" {
+  description = "The name of the EKS cluster."
+  type        = string
+}
+
+variable "cluster_version" {
+  description = "The version of the EKS cluster."
+  type        = string
+}
+
+variable "environment" {
+  description = "The environment for tagging."
+  type        = string
+}
+
+variable "project" {
+  description = "The project name for tagging."
+  type        = string
+}
+
+variable "main_ami" {
+  description = "The AMI for the main instances in the launch template."
+  type        = string
+}
+
+variable "main_instance_type" {
+  description = "The instance type for the main instances in the launch template."
+  type        = string
+}
+
+variable "prometheus_ami" {
+  description = "The AMI for the Prometheus instance."
+  type        = string
+}
+
+variable "prometheus_instance_type" {
+  description = "The instance type for the Prometheus instance."
+  type        = string
+}
+
+variable "grafana_ami" {
+  description = "The AMI for the Grafana instance."
+  type        = string
+}
+
+variable "grafana_instance_type" {
+  description = "The instance type for the Grafana instance."
+  type        = string
 }
