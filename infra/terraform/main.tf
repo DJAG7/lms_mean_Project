@@ -107,56 +107,85 @@ resource "aws_iam_role_policy_attachment" "eks_cluster_policy_attachment" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
 }
 
-# Create Launch Template for ASG
+# Define AWS Security Group
+resource "aws_security_group" "main" {
+  name        = "main-security-group"
+  vpc_id      = aws_vpc.lms_cluster.id
+
+  // Define your security group rules here
+  // For example:
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+# Create Application Load Balancer (ALB)
+resource "aws_lb" "main" {
+  name               = "main-alb"
+  internal           = false
+  load_balancer_type = "application"
+  subnets            = [aws_subnet.public.id]
+  security_groups    = [aws_security_group.main.id]  # Reference the security group defined above
+
+  // Define other ALB configurations here
+}
+
+# ALB Listener Configuration
+resource "aws_lb_listener" "http" {
+  load_balancer_arn = aws_lb.main.arn
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.main.arn
+  }
+}
+
+
+# Define Launch Template
 resource "aws_launch_template" "main" {
   name_prefix   = "main-launch-template-"
   image_id      = var.main_ami
-  instance_type = var.main_instance_type
+  instance_type = "t2.micro"
 
-  network_interfaces {
-    associate_public_ip_address = true
-    subnet_id                   = aws_subnet.public.id
-  }
-
-  tag_specifications {
-    resource_type = "instance"
-    tags = {
-      Name = "main-instance"
-    }
-  }
-
-  user_data = <<-EOF
-              #!/bin/bash
-              # Add your user data script here
-              EOF
+  // Define other configurations as needed
 }
 
 # AutoScaling Group
 resource "aws_autoscaling_group" "main" {
-  desired_capacity     = 1
-  max_size             = 3
-  min_size             = 1
-  vpc_zone_identifier  = [aws_subnet.public.id]
+  desired_capacity    = 1
+  max_size            = 3
+  min_size            = 1
+  vpc_zone_identifier = [aws_subnet.public.id]
+
   launch_template {
     id      = aws_launch_template.main.id
     version = "$Latest"
   }
 
-  tag {
-    key                 = "Name"
-    value               = "main-instance"
-    propagate_at_launch = true
-  }
+  // Attach the ALB to the ASG
+  target_group_arns = [aws_lb_target_group.main.arn]
 
-  lifecycle {
-    create_before_destroy = true
-  }
+  // Define other configurations for the ASG
 }
 
-# IAM Role for Prometheus (conditionally created)
-resource "aws_iam_role" "prometheus_role" {
-  count = length(data.aws_iam_role.prometheus_role.arn) > 0 ? 0 : 1
+# Define Target Group for ALB
+resource "aws_lb_target_group" "main" {
+  name     = "main-target-group"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = aws_vpc.lms_cluster.id
 
+  // Define health check settings and other configurations as needed
+}
+
+
+# IAM Role for Prometheus
+resource "aws_iam_role" "prometheus_role" {
   name = "prometheus_role"
 
   assume_role_policy = jsonencode({
@@ -175,28 +204,18 @@ resource "aws_iam_role" "prometheus_role" {
 
 # Attach EC2 Read-Only Policy to Prometheus Role
 resource "aws_iam_role_policy_attachment" "prometheus_ec2_readonly_policy" {
-  count = length(data.aws_iam_role.prometheus_role.arn) > 0 ? 0 : 1
-
-  role       = aws_iam_role.prometheus_role[0].name
+  role       = aws_iam_role.prometheus_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess"
 }
 
 # Create Instance Profile for Prometheus
 resource "aws_iam_instance_profile" "prometheus_instance_profile" {
   name = "prometheus_instance_profile"
-  role = length(data.aws_iam_role.prometheus_role.arn) > 0 ? data.aws_iam_role.prometheus_role.name : aws_iam_role.prometheus_role[0].name
+  role = aws_iam_role.prometheus_role.name
 }
 
-# Check for existing security group for Prometheus
-data "aws_security_group" "prometheus_lms_security_group" {
-  filter {
-    name   = "group-name"
-    values = ["prometheus_lms_security_group"]
-  }
-}
-
+# Security Group for Prometheus
 resource "aws_security_group" "prometheus_lms_security_group" {
-  count = length(data.aws_security_group.prometheus_lms_security_group.id) == 0 ? 1 : 0
   vpc_id = aws_vpc.lms_cluster.id
 
   ingress {
@@ -218,16 +237,8 @@ resource "aws_security_group" "prometheus_lms_security_group" {
   }
 }
 
-# Check for existing security group for Grafana
-data "aws_security_group" "grafana_lms_security_group" {
-  filter {
-    name   = "group-name"
-    values = ["grafana_lms_security_group"]
-  }
-}
-
+# Security Group for Grafana
 resource "aws_security_group" "grafana_lms_security_group" {
-  count = length(data.aws_security_group.grafana_lms_security_group.id) == 0 ? 1 : 0
   vpc_id = aws_vpc.lms_cluster.id
 
   ingress {
@@ -249,16 +260,14 @@ resource "aws_security_group" "grafana_lms_security_group" {
   }
 }
 
-# EC2 instance for Prometheus
+# Prometheus Instance
 resource "aws_instance" "prometheus" {
   ami                         = var.prometheus_ami
   instance_type               = var.prometheus_instance_type
   subnet_id                   = aws_subnet.public.id
   associate_public_ip_address = true
   iam_instance_profile        = aws_iam_instance_profile.prometheus_instance_profile.name
-  security_groups = length(data.aws_security_group.prometheus_lms_security_group.ids) > 0 
-    ? [data.aws_security_group.prometheus_lms_security_group.ids[0]]
-    : [aws_security_group.prometheus_lms_security_group.id]
+  security_groups             = [aws_security_group.prometheus_lms_security_group.id]
 
   user_data = <<-EOF
               #!/bin/bash
@@ -275,8 +284,8 @@ resource "aws_instance" "prometheus" {
               sudo mv lms_mean_project/grafanaprometheusfiles/prometheus.yml /etc/prometheus/prometheus.yml
 
               # Replace placeholders in prometheus.yml
-              sudo sed -i 's/YOUR REGION/$${var.region}/g' /etc/prometheus/prometheus.yml
-              sudo sed -i 's/YOUR_PROMETHEUS_ROLE_ARN/$${aws_iam_role.prometheus_role.arn}/g' /etc/prometheus/prometheus.yml
+              sudo sed -i 's/YOUR REGION/${var.region}/g' /etc/prometheus/prometheus.yml
+              sudo sed -i 's/YOUR_PROMETHEUS_ROLE_ARN/${aws_iam_role.prometheus_role.arn}/g' /etc/prometheus/prometheus.yml
               
               sudo /usr/local/bin/prometheus --config.file=/etc/prometheus/prometheus.yml &
               EOF
@@ -286,30 +295,26 @@ resource "aws_instance" "prometheus" {
   }
 }
 
-# EC2 instance for Grafana
+# Grafana Instance
 resource "aws_instance" "grafana" {
   ami                         = var.grafana_ami
   instance_type               = var.grafana_instance_type
   subnet_id                   = aws_subnet.public.id
   associate_public_ip_address = true
-  security_groups = length(data.aws_security_group.grafana_lms_security_group.ids) > 0 
-    ? [data.aws_security_group.grafana_lms_security_group.ids[0]]
-    : [aws_security_group.grafana_lms_security_group.id]
+  security_groups             = [aws_security_group.grafana_lms_security_group.id]
 
   user_data = <<-EOF
               #!/bin/bash
               sudo yum update -y
               sudo yum install -y wget
-              wget https://dl.grafana.com/oss/release/grafana-7.5.1-1.x86_64.rpm
-              sudo yum localinstall grafana-7.5.1-1.x86_64.rpm -y
-              sudo systemctl start grafana-server
-              sudo systemctl enable grafana-server
+              cd /tmp
+              wget https://dl.grafana.com/oss/release/grafana-7.4.0-1.x86_64.rpm
+              sudo yum localinstall grafana-7.4.0-1.x86_64.rpm -y
+              sudo service grafana-server start
               EOF
 
   tags = {
     Name = "Grafana"
   }
 }
-
-
 

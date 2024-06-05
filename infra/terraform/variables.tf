@@ -25,7 +25,7 @@ variable "project" {
 
 variable "main_ami" {
   description = "AMI ID for the main instances"
-  default     = "ami-0c55b159cbfafe1f0"  # Replace with your desired AMI ID
+  default     = "ami-0f58b397bc5c1f2e8" # Replace with your desired AMI ID
 }
 
 variable "grafana_instance_type" {
@@ -40,11 +40,11 @@ variable "prometheus_instance_type" {
 
 variable "grafana_ami" {
   description = "AMI ID for the Grafana server"
-  default     = "ami-0c55b159cbfafe1f0"  # Replace with your desired AMI ID
+  default     = "ami-00fa32593b478ad6e"  # Replace with your desired AMI ID
 }
 
 variable "prometheus_ami" {
   description = "AMI ID for the Prometheus server"
-  default     = "ami-0c55b159cbfafe1f0"  # Replace with your desired AMI ID
+  default     = "ami-00fa32593b478ad6e"  # Replace with your desired AMI ID
 }
 
