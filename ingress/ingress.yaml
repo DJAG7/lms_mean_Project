@@ -4,17 +4,17 @@ metadata:
   name: ingressdeployment
 spec:
   rules:
-  - host: localhost
+  - host: ankurchauhan.online
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: ploy-lms-frontend 
+            name: deploy-lms-frontend 
             port:
               number: 4200
-  - host: localhost
+  - host: backend.ankurchauhan.online
     http:
       paths:
       - path: /
@@ -24,3 +24,13 @@ spec:
             name: deploy-lms-backend
             port:
               number: 3001
+  - host: compiler.ankurchauhan.online
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: judge0-server
+            port:
+              number: 2358
