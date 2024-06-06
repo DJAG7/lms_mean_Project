@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: deploy-lms-frontend
+  name: deploy-lms-frontend-service
 spec:
   selector:
-    app: deploy-lms-frontend
+    app: deploy-lms-frontend-service
   ports:
   - port: 4200
     targetPort: 4200
