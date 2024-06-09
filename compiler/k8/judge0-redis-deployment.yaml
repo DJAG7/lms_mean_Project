@@ -23,13 +23,13 @@ spec:
           volumeMounts:
             - name: redis-pvc
               mountPath: /data
-          resources:
-            limits:
-              cpu: "0.5"
-              memory: "512Mi"
-            requests:
-              cpu: "0.2"
-              memory: "256Mi"
+          # resources:
+          #   limits:
+          #     cpu: "0.5"
+          #     memory: "512Mi"
+          #   requests:
+          #     cpu: "0.2"
+          #     memory: "256Mi"
       volumes:
         - name: redis-pvc
           persistentVolumeClaim:

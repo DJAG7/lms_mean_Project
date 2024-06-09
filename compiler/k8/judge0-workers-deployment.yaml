@@ -25,13 +25,13 @@ spec:
               mountPath: /dev/kvm
           securityContext:
             privileged: true
-          resources:
-            limits:
-              cpu: "0.5"
-              memory: "512Mi"
-            requests:
-              cpu: "0.2"
-              memory: "256Mi"
+          # resources:
+          #   limits:
+          #     cpu: "0.5"
+          #     memory: "512Mi"
+          #   requests:
+          #     cpu: "0.2"
+          #     memory: "256Mi"
       volumes:
         - name: judge0-config-volume
           configMap:

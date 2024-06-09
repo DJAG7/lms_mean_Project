@@ -34,13 +34,13 @@ spec:
               readOnly: true
           ports:
             - containerPort: 2358
-          resources:
-            limits:
-              cpu: "300m"
-              memory: "512Mi"
-            requests:
-              cpu: "200m"
-              memory: "512Mi"
+          # resources:
+          #   limits:
+          #     cpu: "300m"
+          #     memory: "512Mi"
+          #   requests:
+          #     cpu: "200m"
+          #     memory: "512Mi"
       volumes:
         - name: judge0-config
           configMap:
