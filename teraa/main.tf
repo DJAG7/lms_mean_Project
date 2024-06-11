@@ -149,7 +149,7 @@ resource "aws_eks_node_group" "node_group" {
   }
 
   instance_types = ["t3a.large"]
-  disk_size      = 25
+  disk_size      = 60
 
   depends_on = [
     aws_iam_role_policy_attachment.eks_node_AmazonEKSWorkerNodePolicy,
