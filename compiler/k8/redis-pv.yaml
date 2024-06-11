@@ -4,7 +4,7 @@ metadata:
   name: redis-pv
   labels:
     type: local
-    app: redis
+    app: judge0-redis
 spec:
   storageClassName: manual
   capacity:
