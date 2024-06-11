@@ -1,36 +1,40 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingressdeployment
+  name: lms-ingress
+  labels:
+    name: lms-ingress
 spec:
   rules:
-  - host: ankurchauhan.online
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: deploy-lms-frontend 
-            port:
-              number: 4200
-  - host: backend.ankurchauhan.online
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: deploy-lms-backend
-            port:
-              number: 3001
   - host: compiler.ankurchauhan.online
     http:
       paths:
-      - path: /
-        pathType: Prefix
+      - pathType: Prefix
+        path: "/compiler(/|$)(.*)"
         backend:
           service:
             name: judge0-server
-            port:
+            port: 
               number: 2358
+
+  - host: backend.ankurchauhan.online
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/backend(/|$)(.*)"
+        backend:
+          service:
+            name: deploy-lms-backend
+            port: 
+              number: 3001
+
+  - host: ankurchauhan.online
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/(/|$)(.*)"
+        backend:
+          service:
+            name: deploy-lms-frontend 
+            port: 
+              number: 4200
