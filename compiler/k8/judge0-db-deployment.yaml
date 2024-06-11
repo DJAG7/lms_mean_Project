@@ -28,7 +28,7 @@ spec:
                   key: POSTGRES_PASSWORD
           volumeMounts:
             - name: postgres-pvc
-              mountPath: /var/lib/postgresql/data
+              mountPath: /var/lib/PostgreSql/data
           # resources:
           #   limits:
           #     cpu: "0.5"
