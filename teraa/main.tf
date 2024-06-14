@@ -138,7 +138,7 @@ resource "aws_iam_role_policy_attachment" "eks_node_AmazonEC2ContainerRegistryRe
 # Create the EKS Node Group
 resource "aws_eks_node_group" "node_group" {
   cluster_name    = aws_eks_cluster.eks.name
-  node_group_name = "example-node-group"
+  node_group_name = "lms-node-group"
   node_role_arn   = aws_iam_role.eks_node_group_role.arn
   subnet_ids      = aws_subnet.public[*].id
 
