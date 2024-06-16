@@ -4,7 +4,7 @@ metadata:
   name: deploy-lms-backend-service
 spec:
   selector:
-    app: deploy-lms-backend-service
+    app: deploy-lms-backend
   ports:
   - port: 3001
     targetPort: 3001

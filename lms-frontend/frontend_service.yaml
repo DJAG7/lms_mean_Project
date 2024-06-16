@@ -4,7 +4,7 @@ metadata:
   name: deploy-lms-frontend-service
 spec:
   selector:
-    app: deploy-lms-frontend-service
+    app: deploy-lms-frontend
   ports:
   - port: 4200
     targetPort: 4200
