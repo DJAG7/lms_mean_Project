@@ -8,6 +8,6 @@ spec:
     app: judge0-server
   ports:
     - protocol: TCP
-      port: 2358
+      port: 80
       targetPort: 2358
   type: LoadBalancer
