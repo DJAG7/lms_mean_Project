@@ -6,6 +6,6 @@ spec:
   selector:
     app: deploy-lms-frontend
   ports:
-  - port: 4200
+  - port: 80
     targetPort: 4200
   type: LoadBalancer
