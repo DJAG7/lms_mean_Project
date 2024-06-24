@@ -17,4 +17,4 @@ spec:
         image: "ankuronlyme/capstone_frontend:v1"
         
         ports:
-        - containerPort: 4200
+        - containerPort: 80
