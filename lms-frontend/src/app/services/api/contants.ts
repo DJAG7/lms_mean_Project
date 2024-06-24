@@ -1,2 +1,2 @@
-export const backendUrl = 'http://localhost:3000';
-export const frontendUrl = 'http://localhost:4200';
+export const backendUrl = 'http://api.ankurchauhan.online';
+export const frontendUrl = 'http://ankurchauhan.online';
