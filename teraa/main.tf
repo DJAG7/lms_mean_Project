@@ -133,9 +133,9 @@ resource "aws_eks_node_group" "node_group" {
   subnet_ids      = aws_subnet.public[*].id
 
   scaling_config {
-    desired_size = 3
-    max_size     = 5
-    min_size     = 3
+    desired_size = 4
+    max_size     = 7
+    min_size     = 4
   }
 
   instance_types = ["t3a.large"]
