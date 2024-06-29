@@ -15,5 +15,59 @@ spec:
       containers:
       - name: deploy-lms-backend
         image: "ankuronlyme/capstone_backend:${BUILD_NUMBER}"
+        env:
+          - name: PORT
+            valueFrom:
+              secretKeyRef:
+                name: backend-secrets
+                key: PORT
+
+          - name: MONGO_URL
+            value: "mongodb+srv://TravelMemory:Travel@ankurcluster.h2znnvu.mongodb.net/Travel"
+              
+          - name: JWT_TOKEN_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: backend-secrets
+                key: JWT_TOKEN_SECRET
+
+          - name: AWS_REGION
+            valueFrom:
+              secretKeyRef:
+                name: backend-secrets
+                key: AWS_REGION
+
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: backend-secrets
+                key: AWS_ACCESS_KEY_ID
+
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: backend-secrets
+                key: AWS_SECRET_ACCESS_KEY
+
+          - name: AWS_BUCKET_NAME
+            valueFrom:
+              secretKeyRef:
+                name: backend-secrets
+                key: AWS_BUCKET_NAME
+
+          - name: GITHUB_CLIENT_ID
+            valueFrom:
+              secretKeyRef:
+                name: backend-secrets
+                key: GITHUB_CLIENT_ID
+
+          - name: GITHUB_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: backend-secrets
+                key: GITHUB_CLIENT_SECRET
+
+          - name: COMPILER_URL
+            value: "http://compiler.ankurchauhan.online"
         ports:
         - containerPort: 3001

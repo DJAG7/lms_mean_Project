@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: deploy-lms-backend
-        image: "ankuronlyme/capstone_backend:168"
+        image: "ankuronlyme/capstone_backend:169"
         ports:
         - containerPort: 3001
