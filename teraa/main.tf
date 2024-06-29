@@ -141,10 +141,6 @@ resource "aws_eks_node_group" "node_group" {
   instance_types = ["t3a.large"]
   disk_size      = 60
 
-lifecycle {
-    ignore_changes = [scaling_config[0].desired_size, instance_types, disk_size]
-  }
-
   depends_on = [
     aws_iam_role_policy_attachment.eks_node_AmazonEKSWorkerNodePolicy,
     aws_iam_role_policy_attachment.eks_node_AmazonEKS_CNI_Policy,
