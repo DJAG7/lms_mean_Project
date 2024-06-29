@@ -115,7 +115,7 @@ export class StudentProfileComponent {
         error: (err) => {
           console.log(err);
           this.storeService.logout();
-          window.location.href = 'http://localhost:4200/';
+          window.location.href = 'http://ankurchauhan.online/';
         },
       });
     });
