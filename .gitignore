@@ -2,4 +2,10 @@
 tm_key.pem
 
 Documentation.docx
-terraform.tfstate
+terra/terraform.tfstate
+terra/terraform.tfstate.backup
+terra/terraform.lock.hcl
+terra/.terraform
+lms-frontend/.vscode
+lms-frontend/.angular
+lms-backend/.env
