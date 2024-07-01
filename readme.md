@@ -6,7 +6,7 @@
 
 -Install Dependencies
 
-npm install
+ command: npm install
 
 -Configure Environment Variables
 
@@ -37,18 +37,19 @@ EXPOSE 3001
 CMD ["node", "server.js"]
 
 
+
 -Build and Push Docker Image
 
-docker build -t lms-backend:latest .
-docker tag lms-backend:latest ankuronlyme/capstone_backend:v1
-docker push ankuronlyme/capstone_backend:v1
+ command: docker build -t lms-backend:latest .
+ command: docker tag lms-backend:latest ankuronlyme/capstone_backend:v1
+ command: docker push ankuronlyme/capstone_backend:v1
 
 ![alt text](./screenshots/image-2.png)
 
 
--Run Docker Container
+Run Docker Container
 
-docker run -dp 3001:3001 \
+ command: docker run -dp 3001:3001 \
   -e "PORT=3001" \
   -e "MONGO_URL=mongodb+srv://TravelMemory:Travel@ankurcluster.h2znnvu.mongodb.net/Travel" \
   -e "GITHUB_CLIENT_SECRET=clientpassword" \
