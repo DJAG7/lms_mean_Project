@@ -1,32 +1,32 @@
 
 
-#Backend Setup
+# Backend Setup
 
--Clone Repository: Clone the development branch from Prashant's repository.
+# Clone Repository: Clone the development branch from Prashant's repository.
 
--Install Dependencies
+# Install Dependencies
 
- command: npm install
+    command: npm install
 
--Configure Environment Variables
+# Configure Environment Variables
 
-Create a .env file in the root with the following variables:
+-Create a .env file in the root with the following variables:
 
-PORT=3001
-Mongo_URL=mongodb+srv://TravelMemory:Travel@ankurcluster.h2znnvu.mongodb.net/Travel
-GITHUB_CLIENT_SECRET=clientpassword
+    - PORT=3001
+    - Mongo_URL=mongodb+srv://TravelMemory:Travel@ankurcluster.h2znnvu.mongodb.net/Travel
+    - GITHUB_CLIENT_SECRET=clientpassword
 
--Run Server
+# Run Server
 
-node server.js
+    command: node server.js
 
 
-Access the backend on http://localhost:3001.
+- Access the backend on http://localhost:3001.
 
 ![alt text](./screenshots/image-1.png)
 
 
--Docker Setup for Backend
+# Docker Setup for Backend
 
 FROM node:18
 WORKDIR /app
@@ -38,22 +38,18 @@ CMD ["node", "server.js"]
 
 
 
--Build and Push Docker Image
+# Build and Push Docker Image
 
- command: docker build -t lms-backend:latest .
- command: docker tag lms-backend:latest ankuronlyme/capstone_backend:v1
- command: docker push ankuronlyme/capstone_backend:v1
+    command: docker build -t lms-backend:latest .
+    command: docker tag lms-backend:latest ankuronlyme/capstone_backend:v1
+    command: docker push ankuronlyme/capstone_backend:v1
 
 ![alt text](./screenshots/image-2.png)
 
 
-Run Docker Container
+# Run Docker Container
 
- command: docker run -dp 3001:3001 \
-  -e "PORT=3001" \
-  -e "MONGO_URL=mongodb+srv://TravelMemory:Travel@ankurcluster.h2znnvu.mongodb.net/Travel" \
-  -e "GITHUB_CLIENT_SECRET=clientpassword" \
-  ankuronlyme/capstone_backend:v1
+    command: docker run -dp 3001:3001 \-e "PORT=3001" \-e "MONGO_URL=mongodb+srv://TravelMemory:Travel@ankurcluster.h2znnvu.mongodb.net/Travel" \-e "GITHUB_CLIENT_SECRET=clientpassword" \ankuronlyme/capstone_backend:v1
 
 ![alt text](./screenshots/image-3.png)
 
