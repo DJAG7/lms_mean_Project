@@ -146,30 +146,30 @@ CMD [ "nginx", "-g", "daemon off;" ]
 
 - Installation of Compiler
 
-wget https://github.com/judge0/judge0/releases/download/v1.13.0/judge0-v1.13.0.zip
-unzip judge0-v1.13.0.zip
-cd judge0-v1.13.0
-sudo docker-compose up -d db redis
-sleep 10s
-sudo docker-compose up -d
-sleep 5s
+    •	wget https://github.com/judge0/judge0/releases/download/v1.13.0/judge0-v1.13.0.zip
+    •	unzip judge0-v1.13.0.zip
+    •	cd judge0-v1.13.0
+    •	sudo docker-compose up -d db redis
+    •	sleep 10s
+    •	sudo docker-compose up -d
+    •	sleep 5s
 
 - Configuring server and nginx with certbot.
 
-sudo apt-get update -y
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-sudo apt-get install apt-transport-https ca-certificates curl gnupg lsb-release -y
-sudo apt-get update -y
-sudo apt-get install docker-ce docker-ce-cli containerd.io -y
-sudo usermod -aG docker $USER
-sudo apt-get install docker-compose -y
-sudo apt-get install nginx -y
-sudo apt install snapd -y
-sudo snap install --classic certbot
-sudo ln -s /snap/bin/certbot /usr/bin/certbot
-sudo certbot --nginx
-sudo apt install unzip -y
+    •	sudo apt-get update -y
+    •	curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+    •	echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    •	sudo apt-get install apt-transport-https ca-certificates curl gnupg lsb-release -y
+    •	sudo apt-get update -y
+    •	sudo apt-get install docker-ce docker-ce-cli containerd.io -y
+    •	sudo usermod -aG docker $USER
+    •	sudo apt-get install docker-compose -y
+    •	sudo apt-get install nginx -y
+    •	sudo apt install snapd -y
+    •	sudo snap install --classic certbot
+    •	sudo ln -s /snap/bin/certbot /usr/bin/certbot
+    •	sudo certbot --nginx
+    •	sudo apt install unzip -y
 
 - Compiler is succesfully setupin local machine.
 
@@ -178,20 +178,21 @@ sudo apt install unzip -y
 
 # After Setup of frontend, backend and compiler now start writing the kubenetes files for frontend, backned and compiler.
  - Write Kubernetes Manifests for Compiler:
-        Configmap.yaml
-        storageclass.yaml
-        postgres-secret.yaml
-        postgres-pv.yaml
-        postgres-pvc.yaml
-        judge0-db-deployment.yaml
-        postgres-service.yaml
-        redis-pv.yaml
-        redis-pvc.yaml
-        judge0-redis-deployment.yaml
-        redis-service.yaml
-        compiler_service.yaml
-        judge0-server-deployment.yaml
-        judge0-workers-deployment.yaml
+    •	Configmap.yaml
+    •	storageclass.yaml
+    •	postgres-secret.yaml
+    •	postgres-pv.yaml
+    •	postgres-pvc.yaml
+    •	judge0-db-deployment.yaml
+    •	postgres-service.yaml
+    •	redis-pv.yaml
+    •	redis-pvc.yaml
+    •	judge0-redis-deployment.yaml
+    •	redis-service.yaml
+    •	compiler_service.yaml
+    •	judge0-server-deployment.yaml
+    •	judge0-workers-deployment.yaml
+
 
  - Important configuration required in compiler for correct excution:
 
@@ -271,132 +272,132 @@ terraform {
 
 - AWS Provider Configuration: Configures the AWS provider with the specified region (ap-south-1).
 
-provider "aws" {
-  region = "ap-south-1"  # Replace with your desired AWS region
-}
+    provider "aws" {
+        region = "ap-south-1"  # Replace with your desired AWS region
+    }
 
 - Fetch Availability Zones: Fetches availability zones in the configured region.
 
-data "aws_availability_zones" "available" {}
+    data "aws_availability_zones" "available" {}
 
 - Local Variables: Stores availability zone names fetched from aws_availability_zones data source.
 
-locals {
-  availability_zones = data.aws_availability_zones.available.names
-}
+    locals {
+        availability_zones = data.aws_availability_zones.available.names
+    }
 
 - IAM Roles: Fetches existing IAM roles (eks-cluster-role and eks-node-group-role) for EKS.
 
-data "aws_iam_role" "eks_cluster_role" {
-  name = "eks-cluster-role"
-}
+    data "aws_iam_role" "eks_cluster_role" {
+        name = "eks-cluster-role"
+    }
 
-data "aws_iam_role" "eks_node_group_role" {
-  name = "eks-node-group-role"
-}
+    data "aws_iam_role" "eks_node_group_role" {
+        name = "eks-node-group-role"
+    }
 
 - IAM Role Policy Attachments: Attaches required IAM policies 
 (AmazonEKSClusterPolicy, AmazonEKSServicePolicy, AmazonEKSWorkerNodePolicy, AmazonEKS_CNI_Policy, AmazonEC2ContainerRegistryReadOnly) to their respective roles.
 
-resource "aws_iam_role_policy_attachment" "eks_cluster_AmazonEKSClusterPolicy" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
-  role       = data.aws_iam_role.eks_cluster_role.name
-}
+    resource "aws_iam_role_policy_attachment" "eks_cluster_AmazonEKSClusterPolicy" {
+        policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
+        role       = data.aws_iam_role.eks_cluster_role.name
+    }
 
-resource "aws_iam_role_policy_attachment" "eks_cluster_AmazonEKSServicePolicy" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSServicePolicy"
-  role       = data.aws_iam_role.eks_cluster_role.name
-}
+    resource "aws_iam_role_policy_attachment" "eks_cluster_AmazonEKSServicePolicy" {
+        policy_arn = "arn:aws:iam::aws:policy/AmazonEKSServicePolicy"
+        role       = data.aws_iam_role.eks_cluster_role.name
+    }
 
-resource "aws_iam_role_policy_attachment" "eks_node_AmazonEKSWorkerNodePolicy" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
-  role       = data.aws_iam_role.eks_node_group_role.name
-}
+    resource "aws_iam_role_policy_attachment" "eks_node_AmazonEKSWorkerNodePolicy" {
+        policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+        role       = data.aws_iam_role.eks_node_group_role.name
+    }
 
-resource "aws_iam_role_policy_attachment" "eks_node_AmazonEKS_CNI_Policy" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
-  role       = data.aws_iam_role.eks_node_group_role.name
-}
+    resource "aws_iam_role_policy_attachment" "eks_node_AmazonEKS_CNI_Policy" {
+        policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+        role       = data.aws_iam_role.eks_node_group_role.name
+    }
 
-resource "aws_iam_role_policy_attachment" "eks_node_AmazonEC2ContainerRegistryReadOnly" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-  role       = data.aws_iam_role.eks_node_group_role.name
-}
+    resource "aws_iam_role_policy_attachment" "eks_node_AmazonEC2ContainerRegistryReadOnly" {
+        policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+        role       = data.aws_iam_role.eks_node_group_role.name
+    }
 
 - VPC and Subnets:
     •	Creates a VPC (eks-vpc) with CIDR block 10.0.0.0/16.
     •	Creates three public subnets (eks-public-subnet-${count.index}) across different availability zones.
 
-resource "aws_vpc" "main" {
-  cidr_block = "10.0.0.0/16"
+    resource "aws_vpc" "main" {
+        cidr_block = "10.0.0.0/16"
 
-  tags = {
-    Name = "eks-vpc"
-  }
-}
+    tags = {
+        Name = "eks-vpc"
+     }
+    }
 
-resource "aws_subnet" "public" {
-  count = 3
+    resource "aws_subnet" "public" {
+        count = 3
 
-  vpc_id     = aws_vpc.main.id
-  cidr_block = cidrsubnet(aws_vpc.main.cidr_block, 8, count.index)
-  availability_zone = element(local.availability_zones, count.index)
-  map_public_ip_on_launch = true
+        vpc_id     = aws_vpc.main.id
+        cidr_block = cidrsubnet(aws_vpc.main.cidr_block, 8, count.index)
+        availability_zone = element(local.availability_zones, count.index)
+        map_public_ip_on_launch = true
 
-  tags = {
-    Name = "eks-public-subnet-${count.index}"
-  }
-}
+    tags = {
+        Name = "eks-public-subnet-${count.index}"
+     }
+    }
 
 - Internet Gateway and Route Table:
     •	Creates an Internet Gateway (eks-gateway) and associates it with the VPC.
     •	Creates a public route table (eks-public-route-table) with a default route to the Internet Gateway.
     •	Associates each public subnet with the public route table.
 
-resource "aws_internet_gateway" "gw" {
-  vpc_id = aws_vpc.main.id
+    resource "aws_internet_gateway" "gw" {
+        vpc_id = aws_vpc.main.id
 
-  tags = {
-    Name = "eks-gateway"
-  }
-}
+        tags = {
+        Name = "eks-gateway"
+        }
+    }
 
-resource "aws_route_table" "public" {
-  vpc_id = aws_vpc.main.id
+    resource "aws_route_table" "public" {
+        vpc_id = aws_vpc.main.id
 
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.gw.id
-  }
+        route {
+        cidr_block = "0.0.0.0/0"
+        gateway_id = aws_internet_gateway.gw.id
+    }
 
-  tags = {
-    Name = "eks-public-route-table"
-  }
-}
+    tags = {
+        Name = "eks-public-route-table"
+     }
+    }
 
-resource "aws_route_table_association" "public" {
-  count          = length(aws_subnet.public[*].id)
-  subnet_id      = element(aws_subnet.public[*].id, count.index)
-  route_table_id = aws_route_table.public.id
-}
+    resource "aws_route_table_association" "public" {
+        count          = length(aws_subnet.public[*].id)
+        subnet_id      = element(aws_subnet.public[*].id, count.index)
+        route_table_id = aws_route_table.public.id
+    }
 
 - EKS Cluster:
     •	Creates an EKS cluster (capstone_cluster) with the specified IAM role (eks-cluster-role) and VPC configuration.
     •	Depends on IAM policy attachments for the cluster role.
 
-resource "aws_eks_cluster" "eks" {
-  name     = "capstone_cluster"
-  role_arn = data.aws_iam_role.eks_cluster_role.arn
+    resource "aws_eks_cluster" "eks" {
+        name     = "capstone_cluster"
+        role_arn = data.aws_iam_role.eks_cluster_role.arn
 
-  vpc_config {
-    subnet_ids = aws_subnet.public[*].id
-  }
+    vpc_config {
+        subnet_ids = aws_subnet.public[*].id
+    }
 
-  depends_on = [
-    aws_iam_role_policy_attachment.eks_cluster_AmazonEKSClusterPolicy,
-    aws_iam_role_policy_attachment.eks_cluster_AmazonEKSServicePolicy,
-  ]
-}
+    depends_on = [
+        aws_iam_role_policy_attachment.eks_cluster_AmazonEKSClusterPolicy,
+        aws_iam_role_policy_attachment.eks_cluster_AmazonEKSServicePolicy,
+     ]
+    }
 
 
 - EKS Node Group:
@@ -405,40 +406,40 @@ resource "aws_eks_cluster" "eks" {
     •	Depends on IAM policy attachments for the node group role.
 
 
-resource "aws_eks_node_group" "node_group" {
-  cluster_name    = aws_eks_cluster.eks.name
-  node_group_name = "lms-node-group"
-  node_role_arn   = data.aws_iam_role.eks_node_group_role.arn
-  subnet_ids      = aws_subnet.public[*].id
+    resource "aws_eks_node_group" "node_group" {
+        cluster_name    = aws_eks_cluster.eks.name
+        node_group_name = "lms-node-group"
+        node_role_arn   = data.aws_iam_role.eks_node_group_role.arn
+        subnet_ids      = aws_subnet.public[*].id
 
-  scaling_config {
-    desired_size = 4
-    max_size     = 7
-    min_size     = 4
-  }
+    scaling_config {
+        desired_size = 4
+        max_size     = 7
+        min_size     = 4
+    }
 
-  instance_types = ["t3a.large"]
-  disk_size      = 60
+    instance_types = ["t3a.large"]
+        disk_size      = 60
 
-  depends_on = [
-    aws_iam_role_policy_attachment.eks_node_AmazonEKSWorkerNodePolicy,
-    aws_iam_role_policy_attachment.eks_node_AmazonEKS_CNI_Policy,
-    aws_iam_role_policy_attachment.eks_node_AmazonEC2ContainerRegistryReadOnly,
-  ]
-}
+    depends_on = [
+        aws_iam_role_policy_attachment.eks_node_AmazonEKSWorkerNodePolicy,
+        aws_iam_role_policy_attachment.eks_node_AmazonEKS_CNI_Policy,
+        aws_iam_role_policy_attachment.eks_node_AmazonEC2ContainerRegistryReadOnly,
+        ]   
+    }
 
 - Outputs:
     •	Provides outputs for the EKS cluster endpoint (cluster_endpoint) and security group ID (cluster_security_group_id).
 
-output "cluster_endpoint" {
-  description = "EKS cluster endpoint"
-  value       = aws_eks_cluster.eks.endpoint
-}
+    output "cluster_endpoint" {
+        description = "EKS cluster endpoint"
+        value       = aws_eks_cluster.eks.endpoint
+    }
 
-output "cluster_security_group_id" {
-  description = "Security group ID of the EKS cluster"
-  value       = aws_eks_cluster.eks.vpc_config[0].cluster_security_group_id
-}
+    output "cluster_security_group_id" {
+        description = "Security group ID of the EKS cluster"
+        value       = aws_eks_cluster.eks.vpc_config[0].cluster_security_group_id
+    }
 
 - After write the whole code time to excute the terraform code on local machine:
 
@@ -460,7 +461,6 @@ output "cluster_security_group_id" {
     command: terraform apply
 
 ![alt text](./screenshots/image-9.png)
-
 
 
 
