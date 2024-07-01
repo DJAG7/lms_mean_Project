@@ -1,3 +1,6 @@
+# Introduction
+This project involves deploying three services: frontend, backend, and compiler. The deployment process is automated using Kubernetes, Terraform, and Jenkins. Below are the detailed steps and configurations required for each part of the process.
+
 
 
 # Backend Setup
@@ -309,6 +312,23 @@ This file sets up your AWS infrastructure using Terraform. Here's what each part
     command: terraform apply
 
 ![alt text](./screenshots/image-9.png)
+
+
+## Jenkinsfile for CI/CD Pipeline
+
+- Jenkinsfile to automate the CI/CD process.
+    - The Jenkinsfile should include the following stages:
+
+    •	Declarative: Tool Install
+    •	Checkout from Git
+    •	Build Docker Images
+    •	Verify Terraform Installation
+    •	Connect to Terraform
+    •	Configure kubectl
+    •	Deploy to EKS
+
+![alt text](./screenshots/image-10.png)
+
 
 
 
