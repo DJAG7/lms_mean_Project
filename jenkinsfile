@@ -10,16 +10,17 @@ pipeline {
         GITHUB_URL = 'https://github.com/ankuronlyme/lms_mean_Project.git'
         GIT_BRANCH = 'main'
         
-        KUBECTL_PATH = '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\kubectl.exe"'
-        KUBE_CONFIG_DIR = 'C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\lms-capstone\\compiler\\k8'
+        KUBECTL_PATH = 'C:/Users/pc/Downloads/kubectl.exe'
+        Compiler_DIR = 'C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\lms-capstone\\compiler\\k8'
         
         AWS_REGION = 'ap-south-1'
-        AWS_EKS_CLUSTER_NAME = 'lms_cluster'
+        AWS_EKS_CLUSTER_NAME = 'capstone_cluster'
         Aws_Credentials = 'Rootawskey'
-        TERRAFORM_DIR = 'C:/Users/pc/DEVOPS Assignments/capstone/infra/terraform'
+        TERRAFORM_DIR = 'C:/Users/pc/DEVOPS Assignments/capstone/teraa'
         
         BACKEND_DIR = 'C:/Users/pc/DEVOPS Assignments/capstone/lms-backend'
         FRONTEND_DIR = 'C:/Users/pc/DEVOPS Assignments/capstone/lms-frontend'
+        INGRESS_DIR = 'C:/Users/pc/DEVOPS Assignments/capstone/ingress'
     }
     
     tools {
@@ -81,7 +82,8 @@ pipeline {
                 script {
                     withCredentials([aws(credentialsId: 'Rootawskey', region: env.AWS_REGION)]) {
                         dir(env.TERRAFORM_DIR) {
-                            bat 'terraform init'
+                            // bat 'terraform init'
+                            // bat 'nslookup sts.ap-south-1.amazonaws.com'
                             bat 'terraform apply -auto-approve'
                         }
                     }
@@ -106,24 +108,42 @@ pipeline {
                     // Define withCredentials block properly
                     withCredentials([aws(credentialsId: 'Rootawskey', region: env.AWS_REGION)]) {
                         // Apply Kubernetes manifest files
-                        dir(env.KUBE_CONFIG_DIR) {
+                    
+                        
+                        dir(env.Compiler_DIR) {
                             bat "${env.KUBECTL_PATH} apply -f Configmap.yaml"
+                            bat "${env.KUBECTL_PATH} apply -f storageclass.yaml"
                             bat "${env.KUBECTL_PATH} apply -f postgres-secret.yaml"
+                            bat "${env.KUBECTL_PATH} apply -f postgres-pv.yaml"
                             bat "${env.KUBECTL_PATH} apply -f postgres-pvc.yaml"
                             bat "${env.KUBECTL_PATH} apply -f judge0-db-deployment.yaml"
                             bat "${env.KUBECTL_PATH} apply -f postgres-service.yaml"
+                            bat "${env.KUBECTL_PATH} apply -f redis-pv.yaml"
                             bat "${env.KUBECTL_PATH} apply -f redis-pvc.yaml"
                             bat "${env.KUBECTL_PATH} apply -f judge0-redis-deployment.yaml"
+                            bat "${env.KUBECTL_PATH} apply -f redis-service.yaml"
                             bat "${env.KUBECTL_PATH} apply -f compiler_service.yaml"
                             bat "${env.KUBECTL_PATH} apply -f judge0-server-deployment.yaml"
                             bat "${env.KUBECTL_PATH} apply -f judge0-workers-deployment.yaml"
                         }
                         dir(env.BACKEND_DIR) {
-                            bat "${env.KUBECTL_PATH} apply -f backend_deployment.yaml"
+                            def backendTag = "${env.BUILD_ID}"
+                            def deploymentYaml = readFile 'backend_deployment.yaml'
+                            deploymentYaml = deploymentYaml.replaceAll('\\$\\{BUILD_NUMBER\\}', backendTag)
+                            writeFile file: 'updated_backend_deployment.yaml', text: deploymentYaml
+                            
+                            bat "${env.KUBECTL_PATH} apply -f backend-secret.yaml"
+                            bat "${env.KUBECTL_PATH} apply -f updated_backend_deployment.yaml"
                             bat "${env.KUBECTL_PATH} apply -f backend_service.yaml"
                         }
                         dir(env.FRONTEND_DIR) {
-                            bat "${env.KUBECTL_PATH} apply -f frontend_deployment.yaml"
+                            def frontendTag = "${env.BUILD_ID}"
+                            def deploymentYaml = readFile 'frontend_deployment.yaml'
+                            deploymentYaml = deploymentYaml.replaceAll('\\$\\{BUILD_NUMBER\\}', frontendTag)
+                            writeFile file: 'updated_frontend_deployment.yaml', text: deploymentYaml
+                            
+
+                            bat "${env.KUBECTL_PATH} apply -f updated_frontend_deployment.yaml"
                             bat "${env.KUBECTL_PATH} apply -f frontend_service.yaml"
                         }
                     }
