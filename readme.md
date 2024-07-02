@@ -19,6 +19,28 @@ This project involves deploying three services: frontend, backend, and compiler.
     - Mongo_URL=mongodb+srv://{username}:{password}@ankurcluster.h2znnvu.mongodb.net/{database}
     - GITHUB_CLIENT_SECRET=clientpassword
 
+## Need top change some settings in Backend:
+
+ - mvc > controllers > student > courses
+    
+ - executeCode.js create variable URL and replace post url to this variable
+
+```js
+const base_compiler_url = `${process.env.COMPILER_URL}submissions?base64_encoded=true&wait=true`;
+```
+
+    - runSampleTestCases.js create variable URL and replace post url to this variable
+
+```js
+const base_compiler_url = `${process.env.COMPILER_URL}submissions?base64_encoded=true&wait=true`;
+```
+
+    - verifyCode.js create variable URL and replace post url to this variable
+
+```js
+const base_compiler_url = `${process.env.COMPILER_URL}submissions?base64_encoded=true&wait=true`;
+```
+
 ## Run Server
 
     command: node server.js
@@ -63,6 +85,8 @@ CMD ["node", "server.js"]
 # Frontend Setup
 
 ## Cloning the Repository into local system
+
+## 
 
 ## Install Angular CLI
 
@@ -244,6 +268,15 @@ CMD [ "nginx", "-g", "daemon off;" ]
         frontend_deployment.yaml
         frontend_service.yaml
 
+ - Important Configuration required in frontend for excutation
+    - src > app > services > api > constants.ts
+
+```js
+
+export const backendUrl =  'YOUR_BACKEND_URL';
+export const frontendUrl = 'YOUR_FRONTEND_URL';
+
+```
 
 #  Write Terraform Files:
 
@@ -328,6 +361,8 @@ This file sets up your AWS infrastructure using Terraform. Here's what each part
      - Deploy to EKS
 
 ![alt text](./screenshots/image-10.png)
+
+
 
 
 
