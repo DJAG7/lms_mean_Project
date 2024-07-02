@@ -134,12 +134,12 @@ resource "aws_eks_node_group" "node_group" {
 
   scaling_config {
     desired_size = 4
-    max_size     = 7
+    max_size     = 12
     min_size     = 4
   }
 
-  instance_types = ["t3a.large"]
-  disk_size      = 60
+  instance_types = ["t3a.small"]
+  disk_size      = 20
 
   depends_on = [
     aws_iam_role_policy_attachment.eks_node_AmazonEKSWorkerNodePolicy,

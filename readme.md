@@ -149,30 +149,30 @@ CMD [ "nginx", "-g", "daemon off;" ]
 
 - Installation of Compiler
 
-    •	wget https://github.com/judge0/judge0/releases/download/v1.13.0/judge0-v1.13.0.zip
-    •	unzip judge0-v1.13.0.zip
-    •	cd judge0-v1.13.0
-    •	sudo docker-compose up -d db redis
-    •	sleep 10s
-    •	sudo docker-compose up -d
-    •	sleep 5s
+    - wget https://github.com/judge0/judge0/releases/download/v1.13.0/judge0-v1.13.0.zip
+    - unzip judge0-v1.13.0.zip
+    - cd judge0-v1.13.0
+    - sudo docker-compose up -d db redis
+    - sleep 10s
+    - sudo docker-compose up -d
+    - sleep 5s
 
 - Configuring server and nginx with certbot.
 
-    •	sudo apt-get update -y
-    •	curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-    •	echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-    •	sudo apt-get install apt-transport-https ca-certificates curl gnupg lsb-release -y
-    •	sudo apt-get update -y
-    •	sudo apt-get install docker-ce docker-ce-cli containerd.io -y
-    •	sudo usermod -aG docker $USER
-    •	sudo apt-get install docker-compose -y
-    •	sudo apt-get install nginx -y
-    •	sudo apt install snapd -y
-    •	sudo snap install --classic certbot
-    •	sudo ln -s /snap/bin/certbot /usr/bin/certbot
-    •	sudo certbot --nginx
-    •	sudo apt install unzip -y
+    - sudo apt-get update -y
+    - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+    - echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    - sudo apt-get install apt-transport-https ca-certificates curl gnupg lsb-release -y
+    - sudo apt-get update -y
+    - sudo apt-get install docker-ce docker-ce-cli containerd.io -y
+    - sudo usermod -aG docker $USER
+    - sudo apt-get install docker-compose -y
+    - sudo apt-get install nginx -y
+    - sudo apt install snapd -y
+    - sudo snap install --classic certbot
+    - sudo ln -s /snap/bin/certbot /usr/bin/certbot
+    - sudo certbot --nginx
+    - sudo apt install unzip -y
 
 - Compiler is succesfully setupin local machine.
 
@@ -181,20 +181,20 @@ CMD [ "nginx", "-g", "daemon off;" ]
 
 # After Setup of frontend, backend and compiler now start writing the kubenetes files for frontend, backned and compiler.
  - Write Kubernetes Manifests for Compiler:
-    •	Configmap.yaml
-    •	storageclass.yaml
-    •	postgres-secret.yaml
-    •	postgres-pv.yaml
-    •	postgres-pvc.yaml
-    •	judge0-db-deployment.yaml
-    •	postgres-service.yaml
-    •	redis-pv.yaml
-    •	redis-pvc.yaml
-    •	judge0-redis-deployment.yaml
-    •	redis-service.yaml
-    •	compiler_service.yaml
-    •	judge0-server-deployment.yaml
-    •	judge0-workers-deployment.yaml
+    - Configmap.yaml
+    - storageclass.yaml
+    - postgres-secret.yaml
+    - postgres-pv.yaml
+    - postgres-pvc.yaml
+    - judge0-db-deployment.yaml
+    - postgres-service.yaml
+    - redis-pv.yaml
+    - redis-pvc.yaml
+    - judge0-redis-deployment.yaml
+    - redis-service.yaml
+    - compiler_service.yaml
+    - judge0-server-deployment.yaml
+    - judge0-workers-deployment.yaml
 
 
  - Important configuration required in compiler for correct excution:
@@ -319,13 +319,13 @@ This file sets up your AWS infrastructure using Terraform. Here's what each part
 - Jenkinsfile to automate the CI/CD process.
     - The Jenkinsfile should include the following stages:
 
-    •	Declarative: Tool Install
-    •	Checkout from Git
-    •	Build Docker Images
-    •	Verify Terraform Installation
-    •	Connect to Terraform
-    •	Configure kubectl
-    •	Deploy to EKS
+     - Declarative: Tool Install
+     - Checkout from Git
+     - Build Docker Images
+     - Verify Terraform Installation
+     - Connect to Terraform
+     - Configure kubectl
+     - Deploy to EKS
 
 ![alt text](./screenshots/image-10.png)
 
