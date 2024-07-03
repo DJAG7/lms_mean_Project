@@ -1,0 +1,41 @@
+## Cost Management
+
+To provide an accurate cost estimate for our AWS setup, we'll consider the following components:
+
+1. Amazon VPC
+    •	VPC: No direct cost.
+    •	Internet Gateway: No additional cost.
+    •	Subnets: No additional cost.
+
+
+2. EKS Control Plane
+    •	$0.10 per hour for each EKS cluster.
+    •	Monthly cost: 0.10×730=730.10 \times 730 = 730.10×730=73 USD
+
+
+3. EC2 Instances (t3a.small)
+    •	On-demand pricing: Approx. $0.0208 per hour per instance.
+    •	Four instances: 0.0208×4=0.08320.0208 \times 4 = 0.08320.0208×4= 0.0832 USD per hour.
+    •	Monthly cost: 0.0832×730=60.7360.0832 \times 730 = 60.7360.0832×730= 60.736 USD
+
+
+4. EBS Volumes
+    •	20 GB per instance.
+    •	Approx. $0.10 per GB-month.
+    •	Monthly cost per instance: 20×0.10=220 \times 0.10 = 220×0.10=2 USD.
+    •	Total for four instances: 2×4=82 \times 4 = 82×4=8 USD per month
+
+
+5. S3 Bucket for tfstate
+    •	Standard Storage: $0.023 per GB-month.
+        o	For 10 GB:
+    	    Monthly cost: 0.023×10=0.230.023 \times 10 = 0.230.023×10=0.23 USD.
+
+Total Estimated Monthly Cost:
+
+    •	EKS Control Plane: $73
+    •	EC2 Instances: $60.736
+    •	EBS Volumes: $8
+    •	S3 Storage: $0.23
+    •	Total Estimated Cost: 141.93 USD
+
