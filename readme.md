@@ -1,8 +1,6 @@
 # Introduction
 This project involves deploying three services: frontend, backend, and compiler. The deployment process is automated using Kubernetes, Terraform, and Jenkins. Below are the detailed steps and configurations required for each part of the process.
 
-
-
 # Backend Setup
 
 ## Cloning the Repository into local system
@@ -346,11 +344,34 @@ This file sets up your AWS infrastructure using Terraform. Here's what each part
 
 ![alt text](./screenshots/image-9.png)
 
+ - Pushed our terraform.tfstate file into S3 bucket.
+
+![alt text](./screenshots/image-20.png)   
+
 
 ## Jenkinsfile for CI/CD Pipeline
 
 - Jenkinsfile to automate the CI/CD process.
-    - The Jenkinsfile should include the following stages:
+
+ - Setup important credentials and tools to excute our pipeline
+
+   - Jenkins > Manage Jenkins > Credentails:
+
+![alt text](./screenshots/image-21.png)
+
+
+   - Jenkins > Manage Jenkins > Tools:
+
+![alt text](./screenshots/image-22.png)
+
+   - Jenkins > Manage Jenkins > Plugins:
+     - Docker
+     - kubernetes
+     - terraform
+     - aws 
+
+
+- The Jenkinsfile should include the following stages:
 
      - Declarative: Tool Install
      - Checkout from Git
@@ -362,6 +383,54 @@ This file sets up your AWS infrastructure using Terraform. Here's what each part
 
 ![alt text](./screenshots/image-10.png)
 
+- Our pipeline is running successfully and cluster is created on EKS:
+
+![alt text](./screenshots/image-11.png)
+
+
+- Confirm our services are working on EKS:
+
+Frontend with load balancer:
+
+![alt text](./screenshots/image-12.png)
+
+
+Backend with load balancer:
+
+![alt text](./screenshots/image-13.png)
+
+
+Compiler with Load balancer:
+
+![alt text](./screenshots/image-14.png)
+
+
+## Domain hosted with Route53
+
+ - Create your Hoasted Zone.
+
+![alt text](./screenshots/image-15.png) 
+
+ - Create records in hoasted zone and then configured the load balnvcer into records.
+
+![alt text](./screenshots/image-16.png)
+
+
+- Confirm our load balancer are working on Route 53:
+
+Frontend with domain:
+
+![alt text](./screenshots/image-17.png)
+
+
+Backend with domain:
+
+![alt text](./screenshots/image-18.png)
+
+
+Compiler with domain:
+
+![alt text](./screenshots/image-19.png)
 
 
 
