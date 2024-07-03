@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: deploy-lms-frontend
-        image: "ankuronlyme/capstone_frontend:172"
+        image: "ankuronlyme/capstone_frontend:182"
         
         ports:
         - containerPort: 80
