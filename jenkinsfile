@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_HUB_KEY = credentials('ankurdockercredentials')
+        DOCKER_HUB_KEY = credentials('dockercredentials')
         DOCKER_IMAGE_FRONTEND = 'ankuronlyme/capstone_frontend'
         DOCKER_IMAGE_BACKEND = 'ankuronlyme/capstone_backend'
         DOCKER_TAG = "${env.BUILD_ID}"
@@ -25,6 +25,7 @@ pipeline {
     
     tools {
         terraform 'terraform_1.7.5' // Specify the name you gave to the Terraform tool in Jenkins
+        helm 'helm_3.0.0'
     }
 
     stages {
@@ -101,7 +102,34 @@ pipeline {
                 }
             }
         }
+        stage('Deploy Prometheus and Grafana') {
+            steps {
+                script {
+                    withCredentials([aws(credentialsId: 'Rootawskey', region: env.AWS_REGION)]) {
+                        bat 'helm repo add prometheus-community https://prometheus-community.github.io/helm-charts'
+                        bat 'helm repo add grafana https://grafana.github.io/helm-charts'
+                        bat 'helm repo update'
+                        bat 'helm install prometheus prometheus-community/prometheus --namespace monitoring --create-namespace'
+                        bat 'helm install grafana grafana/grafana --namespace monitoring --set adminPassword=your_secure_password'
+                    }
+                }
+            }
+        }
 
+        stage('Get Prometheus and Grafana IPs') {
+            steps {
+                script {
+                    withCredentials([aws(credentialsId: 'Rootawskey', region: env.AWS_REGION)]) {
+                        def prometheusIp = bat(script: 'kubectl get svc prometheus-server -n monitoring -o jsonpath="{.status.loadBalancer.ingress[0].ip}"', returnStdout: true).trim()
+                        def grafanaIp = bat(script: 'kubectl get svc grafana -n monitoring -o jsonpath="{.status.loadBalancer.ingress[0].ip}"', returnStdout: true).trim()
+                        
+                        echo "Prometheus Dashboard: http://${prometheusIp}:80"
+                        echo "Grafana Dashboard: http://${grafanaIp}:80"
+                    }
+                }
+            }
+        }
+        
         stage('Deploy to EKS') {
             steps {
                 script {

@@ -9,6 +9,11 @@ terraform {
       source  = "hashicorp/aws"
       version = ">= 2.0.0"
     }
+
+    helm = {
+      source  = "hashicorp/helm"
+      version = ">= 2.0.0"
+    }
   }
 
   required_version = ">= 1.1"
@@ -156,4 +161,41 @@ output "cluster_endpoint" {
 output "cluster_security_group_id" {
   description = "Security group ID of the EKS cluster"
   value       = aws_eks_cluster.eks.vpc_config[0].cluster_security_group_id
+}
+
+resource "helm_release" "prometheus" {
+  name       = "prometheus"
+  namespace  = "monitoring"
+  chart      = "prometheus"
+  repository = "https://prometheus-community.github.io/helm-charts"
+  version    = "15.5.1"
+
+  set {
+    name  = "service.type"
+    value = "LoadBalancer"
+  }
+}
+
+resource "helm_release" "grafana" {
+  name       = "grafana"
+  namespace  = "monitoring"
+  chart      = "grafana"
+  repository = "https://grafana.github.io/helm-charts"
+  version    = "6.17.4"
+
+  set {
+    name  = "service.type"
+    value = "LoadBalancer"
+  }
+
+  set {
+    name  = "adminPassword"
+    value = "your_secure_password"
+  }
+}
+
+resource "kubernetes_namespace" "monitoring" {
+  metadata {
+    name = "monitoring"
+  }
 }
