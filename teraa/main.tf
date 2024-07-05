@@ -36,7 +36,7 @@ data "aws_iam_role" "eks_cluster_role" {
 }
 
 data "aws_iam_role" "eks_node_group_role" {
-  name = "eks-node-group-role"
+  name = "AWSServiceRoleForAmazonEKSNodegroup"
 }
 
 # Attach the required IAM policies to the EKS role
