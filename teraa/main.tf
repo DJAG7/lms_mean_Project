@@ -32,11 +32,11 @@ locals {
 
 # Use existing IAM roles for EKS Cluster and Node Group
 data "aws_iam_role" "eks_cluster_role" {
-  name = "eks-cluster-role"
+  name = "eks-cluster-role"  #Configure AWS IAM Role for EKS and give EKSClusterPolicy. Enter the name here
 }
 
 data "aws_iam_role" "eks_node_group_role" {
-  name = "AWSServiceRoleForAmazonEKSNodegroup"
+  name = "AWSServiceRoleForAmazonEKSNodegroup"  #Configure AWS IAM Role for EKS and give EKSCNodegroup. Enter the name here (by default :AWSServiceRoleForAmazonEKSNodegroup)
 }
 
 # Attach the required IAM policies to the EKS role
@@ -55,7 +55,7 @@ resource "aws_vpc" "main" {
   cidr_block = "10.0.0.0/16"
 
   tags = {
-    Name = "eks-vpc"
+    Name = "eks-vpc" #replace with any other name value chosen
   }
 }
 
