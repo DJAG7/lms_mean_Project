@@ -1,23 +1,87 @@
-# Introduction
-This project involves deploying three services: frontend, backend, and compiler. The deployment process is automated using Kubernetes, Terraform, and Jenkins. Below are the detailed steps and configurations required for each part of the process.
+# Learning Management System: A MEAN Project
+This project is based on the MEAN architecture (MongoDB, Express, Angular, and Node) and  involves deploying three services: frontend, backend, and compiler for angular. 
 
-# Backend Setup
+## Architecture
 
-## Cloning the Repository into local system
+!< Insert Architecture Diagram
 
-## Install Dependencies
+The architecture represents a CI/CD pipeline and deployment environment that utilizes several tools and cloud services to manage, build, deploy, and monitor applications. ensures a seamless development, deployment.Consist of components work together:
+
+1.	Frontend, Backend, and Compiler Services:
+These services form the core components of the application, each serving different purposes like user interface, business logic, and code compilation.
+2.	Node.js:
+Node.js is used as the runtime environment for these services, enabling JavaScript execution on the server side.
+3.	GitHub:
+Source code is managed and versioned in GitHub. Developers commit and push their changes here.
+Jenkins:
+Jenkins is a CI/CD tool that pulls the latest code from GitHub, builds it, runs tests, and creates Docker images for deployment.
+5 Docker:
+Docker is used to containerize the application, ensuring it runs consistently across different environments.
+
+## Managing Resources and Cost Optimization
+
+This architecture is simple, and Costs are much lower than other MEAN stack applications. As we are running the DevOps pipelines locally and using ECR with EKS on EC2, costs are much cheaper than expected.
+Here is a breakdown of all the costs as per traffic requirements- 
+
+## Deployment Configuration
+
+The LMS project aims to deploy and scale a MEAN stack application (MongoDB, Express.js, Angular, Node.js) to ensure high availability and cost optimization.
+
+### Key Objectives
+
+1. *CI/CD Pipeline*: Automate build, test, and deployment with Jenkins.
+2. *Kubernetes Deployment*: Use Kubernetes for scalable container orchestration.
+3. *Monitoring*: Set up Prometheus and Grafana for system monitoring and visualization.
+
+### Tools
+
+- *AWS Services*: Infrastructure management.
+- *Jenkins*: CI/CD automation.
+- *Kubernetes (K8s)*: Container orchestration.
+- *Prometheus*: Metrics collection.
+- *Grafana*: Metrics visualization.
+- *Terraform*: Infrastructure provisioning.
+
+### Deployment Architecture
+
+- *Frontend*: Angular on port 4200.
+- *Backend*: Node.js/Express.js on port 3001.
+- *Compiler*: Port 2358.
+- *Monitoring*: Prometheus on port 9090, Grafana on port 3000.
+- *Extras*: Autoscaling Groups, Public Network, CloudWatch, Cloudflare.
+
+This setup ensures a robust, scalable, and efficient LMS deployment.
+
+
+The deployment process is automated using Kubernetes, Terraform, and Jenkins. Below are the detailed steps and configurations required for each part of the process.
+
+## Backend Setup
+
+Backend setup uses MongoDB as a NoSQL database store for all the large course data, student data and any other data pertaining to the LMS. This deployment is largely local machine based with pipelines running on the local machine through Jenkins, Docker and Terraform.
+
+Here are the steps -
+
+### Clone the Repository into local system
+
+Install git and clone the repository into the local system. As this is a node application, install node.js and npm 
+
+### Install Dependencies
 
     command: npm install
 
-## Configure Environment Variables
+This will install all the dependencies to run the backend.
+
+### Configure Environment Variables
 
 - Create a .env file in the root with the following variables:
 
     - PORT=3001
-    - Mongo_URL=mongodb+srv://{username}:{password}@ankurcluster.h2znnvu.mongodb.net/{database}
+    - Mongo_URL=mongodb+srv://{username}:{password}@{mongocluster}.mongodb.net/{database}
     - GITHUB_CLIENT_SECRET=clientpassword
 
-## Need top change some settings in Backend:
+We use port 3001 to communicate with the Mongo DB and collect data.
+
+## Need to change some settings in Backend:
 
  - mvc > controllers > student > courses
     
@@ -39,17 +103,17 @@ const base_compiler_url = `${process.env.COMPILER_URL}submissions?base64_encoded
 const base_compiler_url = `${process.env.COMPILER_URL}submissions?base64_encoded=true&wait=true`;
 ```
 
-## Run Server
+### Run Server
 
     command: node server.js
-
 
 - Access the backend on http://localhost:3001.
 
 ![alt text](./screenshots/image-1.png)
 
+### Docker Setup for Backend
 
-## Docker Setup for Backend
+Create a DockerFile to push to ECR. We have a docker file in the repository, and it can be built using the docker commands below-
 
 ```Dockerfile
 
@@ -63,7 +127,7 @@ CMD ["node", "server.js"]
 
 ```
 
-## Build and Push Docker Image
+### Build and Push Docker Image
 
     command: docker build -t lms-backend:latest .
     command: docker tag lms-backend:latest ankuronlyme/capstone_backend:v1
@@ -72,19 +136,18 @@ CMD ["node", "server.js"]
 ![alt text](./screenshots/image-2.png)
 
 
-## Run Docker Container
+### Run Docker Container
 
-    command: docker run -dp 3001:3001 \-e "PORT=3001" \-e "MONGO_URL=mongodb+srv://TravelMemory:Travel@ankurcluster.h2znnvu.mongodb.net/Travel" \-e "GITHUB_CLIENT_SECRET=clientpassword" \ankuronlyme/capstone_backend:v1
+    command: docker run -dp 3001:3001 \-e "PORT=3001" \-e "mongodb+srv://{username}:{password}@{mongocluster}.mongodb.net/{database}" \-e "GITHUB_CLIENT_SECRET=clientpassword" \{dockerhubuid}/capstone_backend:v1
 
 ![alt text](./screenshots/image-3.png)
 
 
+## Frontend Setup
 
-# Frontend Setup
+Front end setup is done in a similar way with a Docker Hub image push.
 
-## Cloning the Repository into local system
-
-## 
+### Clone the Repository into local system
 
 ## Install Angular CLI
 
@@ -103,6 +166,8 @@ CMD ["node", "server.js"]
  - Check the build output in the dist directory.
 
 ## Docker Setup for Frontend
+
+Build a dockerfile below or use our frontend dockerfile from the repository
 
 ```Dockerfile
 
@@ -154,23 +219,24 @@ CMD [ "nginx", "-g", "daemon off;" ]
 ```
 
     
-## Build and Push Docker Image
+### Build and Push Docker Image
 
     command: docker build -t lms-frontend:latest .
-             docker tag lms-frontend:latest ankuronlyme/capstone_frontend:v1
-             docker push ankuronlyme/capstone_frontend:v1
+             docker tag lms-frontend:latest {dockerhubuid}/capstone_frontend:v1
+             docker push {dockerhubuid}/capstone_frontend:v1
 
 ![alt text](./screenshots/image-4.png)
 
-## Run Docker Container
+### Run Docker Container
 
-    command: docker run -dp 4200:80 ankuronlyme/capstone_frontend:v1
-
+    command: docker run -dp 4200:80 {dockerhubuid}/capstone_frontend:v1
 
 ## Compiler Setup
 
-- Installation of Compiler
+- Installation of Compiler for AngularJS deployment involves building the compiler in a local machine and deploying it via Kubernetes
 
+
+### Compiler Installation on Local Machine- Part 1
     - wget https://github.com/judge0/judge0/releases/download/v1.13.0/judge0-v1.13.0.zip
     - unzip judge0-v1.13.0.zip
     - cd judge0-v1.13.0
@@ -179,7 +245,7 @@ CMD [ "nginx", "-g", "daemon off;" ]
     - sudo docker-compose up -d
     - sleep 5s
 
-- Configuring server and nginx with certbot.
+### Configuring server and nginx with certbot.
 
     - sudo apt-get update -y
     - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
@@ -196,13 +262,15 @@ CMD [ "nginx", "-g", "daemon off;" ]
     - sudo certbot --nginx
     - sudo apt install unzip -y
 
-- Compiler is succesfully setupin local machine.
+- Compiler is succesfully setup in the local machine.
 
 ![alt text](./screenshots/image-5.png)'
 
 
-# After Setup of frontend, backend and compiler now start writing the kubenetes files for frontend, backned and compiler.
- - Write Kubernetes Manifests for Compiler:
+## Kubernetes Deployment for Backend, Frontend and Compiler
+
+###  Kubernetes Manifests for Compiler:
+
     - Configmap.yaml
     - storageclass.yaml
     - postgres-secret.yaml
@@ -235,10 +303,11 @@ CMD [ "nginx", "-g", "daemon off;" ]
         backend_deployment.yaml
         backend_service.yaml
 
- - Important Configuration required in backend for excutation
+ - Important Configuration required in backend for execution
 
        - In Backend need to setup secrets
            - backend-secret.yaml file need to add the below credentials
+
 ```yaml
 
     PORT: <YOUR_CONTAINER_PORT_NUMBER>
@@ -276,54 +345,67 @@ export const frontendUrl = 'YOUR_FRONTEND_URL';
 
 ```
 
-#  Write Terraform Files:
+## AWS Configuration:
 
-o	Install Terraform
-o	Terraform Configuration:
-•	Create file for Terraform configuration: main.tf to manage AWS resources.
-Main.tf:
+Before we proceed with Terraform and Jenkins, Configure the following items-
 
-This file sets up your AWS infrastructure using Terraform. Here's what each part does:
+- Create an IAM user with admin permissions and download the access keys
+- Download AWS CLI and configure the local machine. Use command:  aws configure
+- In the IAM console, attach the following policies to certain roles
+- eks-cluster-role:
+     
+      EKSClusterPolicy
+      EC2FullAccess
 
-- Terraform Configuration:
-    - Providers and Terraform Block: Specifies required providers (random and aws) with versions and Terraform minimum version.
+- prometheus-role:
 
+      EC2ReadOnlyAccess
+  
+- AWSServiceRoleForAmazonEKSNodeGroup:
+      Configure the built in role for AmazonEKSNodeGroup
+  
+<! Insert AWS Screenshots here>
 
-    - AWS Provider Configuration: Configures the AWS provider with the specified region (ap-south-1).
+##  Terraform Configuration:
 
-    
-    - Fetch Availability Zones: Fetches availability zones in the configured region.
+To continue with the Terraform Configuration, Download and install terraform.exe on the local machine. Configure the files main.tf (optional outputs.tf and variables.tf). Here is a breakdown of the main.tf file:
 
-    - Local Variables: Stores availability zone names fetched from aws_availability_zones data source.
+### Main.tf Configuration:
 
-    - IAM Roles: Fetches existing IAM roles (eks-cluster-role and eks-node-group-role) for EKS.
-
-    - IAM Role Policy Attachments: Attaches required IAM policies 
-        (AmazonEKSClusterPolicy, AmazonEKSServicePolicy, AmazonEKSWorkerNodePolicy, AmazonEKS_CNI_Policy, AmazonEC2ContainerRegistryReadOnly) to their respective roles.
-
-    - VPC and Subnets:
+1. *Providers and Terraform Block*: Specifies required providers (random and aws) with versions and Terraform minimum version.
+2. *AWS Provider Configuration*: Configures the AWS provider with the specified region (ap-south-1).
+3. *Fetch Availability Zones*: Fetches availability zones in the configured region.
+4. *Local Variables*: Stores availability zone names fetched from aws_availability_zones data source.
+5. *IAM Roles*: Fetches existing IAM roles (eks-cluster-role and eks-node-group-role) for EKS.
+6. *IAM Role Policy Attachments*: Attaches required IAM policies (AmazonEKSClusterPolicy, AmazonEKSServicePolicy, AmazonEKSWorkerNodePolicy, AmazonEKS_CNI_Policy, AmazonEC2ContainerRegistryReadOnly) to their respective roles.
+7. *VPC and Subnets*:
         •	Creates a VPC (eks-vpc) with CIDR block 10.0.0.0/16.
         •	Creates three public subnets (eks-public-subnet-${count.index}) across different availability zones.
-
-    - Internet Gateway and Route Table:
+    
+8. *Internet Gateway and Route Table*:
         •	Creates an Internet Gateway (eks-gateway) and associates it with the VPC.
         •	Creates a public route table (eks-public-route-table) with a default route to the Internet Gateway.
         •	Associates each public subnet with the public route table.
-
-    - EKS Cluster:
+9. *EKS Cluster*:
         •	Creates an EKS cluster (capstone_cluster) with the specified IAM role (eks-cluster-role) and VPC configuration.
         •	Depends on IAM policy attachments for the cluster role.
 
-    - EKS Node Group:
+10. *EKS Node Group*:
         •	Creates an EKS node group (lms-node-group) within the EKS cluster.
         •	Specifies node group configurations like instance types (t3a.large), disk size, and scaling settings (desired_size, max_size, min_size).
         •	Depends on IAM policy attachments for the node group role.
 
-    - Outputs:
+11. *Prometheus and Grafana*:
+        •	Creates a helm/Kubernetes deployment of Grafana and Prometheus.
+        •	Prometheus acts as a listener for the files.
+        •	Grafana is configured as a dashboard for metrics coming via Prometheus.
+    
+12. *Outputs*:
         •	Provides outputs for the EKS cluster endpoint (cluster_endpoint) and security group ID (cluster_security_group_id).
+        •	Provides outputs for the Grafana and Prometheus ip addresses to connect to the Grafana and Prometheus instance respectively.
 
-
-- After write the whole code time to excute the terraform code on local machine:
+### Running Terraform:
+Terraform will be run via Jenkins. This is only to test if the terraform configuration is working.
 
     command: terraform init
 
@@ -344,18 +426,36 @@ This file sets up your AWS infrastructure using Terraform. Here's what each part
 
 ![alt text](./screenshots/image-9.png)
 
- - Pushed our terraform.tfstate file into S3 bucket.
+ - We push the terraform tf.state to an S3 bucket 
 
 ![alt text](./screenshots/image-20.png)   
 
+    command: terraform destroy
+    
+- After Completion of the Terraform Script, destroy everything
 
-## Jenkinsfile for CI/CD Pipeline
+## Jenkins
+- We use Jenkins on the local machine.
+- Install JAR 11,17 or 21 on the local machine and configure paths
+- Run Jenkins as the system and configure Jenkins to use these JAR paths
+- Configure Jenkins to access port 8080
 
-- Jenkinsfile to automate the CI/CD process.
+### Jenkins Setup
+Setup the following Plugins to gain access to all features required to run the jenkinsfile.
 
- - Setup important credentials and tools to excute our pipeline
+- Jenkins > Manage Jenkins > Plugins:
+  
+     - Docker Pipeline
+     - Kubernetes
+     - Kubernetes CLI
+     - terraform
+     - AWS Web Services SDK : ALL
+     - AWS credentials
+     - Pipeline: AWS
 
-   - Jenkins > Manage Jenkins > Credentails:
+- Setup important credentials and tools to excute our pipeline
+
+   - Jenkins > Manage Jenkins > Credentials:
 
 ![alt text](./screenshots/image-21.png)
 
@@ -364,12 +464,8 @@ This file sets up your AWS infrastructure using Terraform. Here's what each part
 
 ![alt text](./screenshots/image-22.png)
 
-   - Jenkins > Manage Jenkins > Plugins:
-     - Docker
-     - kubernetes
-     - terraform
-     - aws 
-
+## Jenkins File
+- Jenkinsfile to automate the CI/CD process.
 
 - The Jenkinsfile should include the following stages:
 
@@ -387,18 +483,15 @@ This file sets up your AWS infrastructure using Terraform. Here's what each part
 
 ![alt text](./screenshots/image-11.png)
 
-
 - Confirm our services are working on EKS:
 
 Frontend with load balancer:
 
 ![alt text](./screenshots/image-12.png)
 
-
 Backend with load balancer:
 
 ![alt text](./screenshots/image-13.png)
-
 
 Compiler with Load balancer:
 
@@ -411,7 +504,7 @@ Compiler with Load balancer:
 
 ![alt text](./screenshots/image-15.png) 
 
- - Create records in hoasted zone and then configured the load balnvcer into records.
+ - Create records in hoasted zone and then configured the load balancer into records.
 
 ![alt text](./screenshots/image-16.png)
 
@@ -431,6 +524,39 @@ Backend with domain:
 Compiler with domain:
 
 ![alt text](./screenshots/image-19.png)
+
+
+## Monitoring with Prometheus and Grafana
+
+- After the deployment either via Kubernetes or yaml deployments (in our repository), Configure Grafana.
+- Use the IP addresses exported via Terraform for Grafana to connect to the instance.
+- The default username and password for Grafana is admin / admin. Log into the Grafana application
+
+!< Configure Grafana
+
+- In Grafana select the Data Sources option under Connections.
+- Click add a data source and connect Prometheus 
+- Add the Prometheus endpoint IP
+
+!< Prometheus Connection
+
+- After it is initialized, click on Dashboards and create a dashboard
+- We built a simple dashboard to check EC2 resources. The dashboard export is available in the repository as a .JSON export.
+
+!< Grafana Dashboard
+
+
+# Conclusion
+
+This brings us to the end of our project hosting a MEAN LMS application. 
+
+## Next Steps
+
+This is a basic outline of how a MEAN three stack application should be hosted. Improvements can include a public docker hub and scripts to run these files along with a Jenkins on Server Approach with a deployment Server being used instead of the local machine in the architecture. 
+
+
+
+
 
 
 
