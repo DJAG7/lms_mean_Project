@@ -3,7 +3,7 @@ This project is based on the MEAN architecture (MongoDB, Express, Angular, and N
 
 ## Architecture
 
-![Architecture Diagram](./architecturediagram.png)
+![Architecture Diagram](architecturediagram.jpg)
 
 The architecture represents a CI/CD pipeline and deployment environment that utilizes several tools and cloud services to manage, build, deploy, and monitor applications. ensures a seamless development, deployment.Consist of components work together:
 
