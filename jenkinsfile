@@ -1,31 +1,33 @@
-pipeline {
+// Replace all the credentials and directories to run this jenkinsfile on a local machine
+
+|pipeline {
     agent any
 
     environment {
-        DOCKER_HUB_KEY = credentials('dockercredentials')
-        DOCKER_IMAGE_FRONTEND = 'ankuronlyme/capstone_frontend'
-        DOCKER_IMAGE_BACKEND = 'ankuronlyme/capstone_backend'
+        DOCKER_HUB_KEY = credentials('dockercredentials') //Configure Docker Credentials
+        DOCKER_IMAGE_FRONTEND = 'dockerhubuid/capstone_frontend' //Docker Hub Image
+        DOCKER_IMAGE_BACKEND = 'dockerhubuid/capstone_backend' //Docker Hub Image
         DOCKER_TAG = "${env.BUILD_ID}"
         
         GITHUB_URL = 'https://github.com/ankuronlyme/lms_mean_Project.git'
         GIT_BRANCH = 'main'
         
-        KUBECTL_PATH = 'C:/Users/pc/Downloads/kubectl.exe'
-        Compiler_DIR = 'C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\lms-capstone\\compiler\\k8'
+        KUBECTL_PATH = 'kubectl.exe' // Replace with your KubeCTL file
+        Compiler_DIR = '' //Replace with your Compiler Directory
         
         AWS_REGION = 'ap-south-1'
         AWS_EKS_CLUSTER_NAME = 'capstone_cluster'
         Aws_Credentials = 'Rootawskey'
-        TERRAFORM_DIR = 'C:/Users/pc/DEVOPS Assignments/capstone/teraa'
+        TERRAFORM_DIR = 'repository/teraa' //Replace with your Terraform Directory or Repository
         
-        BACKEND_DIR = 'C:/Users/pc/DEVOPS Assignments/capstone/lms-backend'
-        FRONTEND_DIR = 'C:/Users/pc/DEVOPS Assignments/capstone/lms-frontend'
-        INGRESS_DIR = 'C:/Users/pc/DEVOPS Assignments/capstone/ingress'
+        BACKEND_DIR = 'repository/lms-backend' //Replace with your Backend Directory or Repository
+        FRONTEND_DIR = 'repository/lms-frontend' //Replace with your Frontend Directory or Repository
+        INGRESS_DIR = 'repository/ingress' //Replace with your Ingress Directory or Repository
     }
     
     tools {
         terraform 'terraform_1.7.5' // Specify the name you gave to the Terraform tool in Jenkins
-        helm 'helm_3.0.0'
+        helm 'helm_3.0.0' //Specify helm release
     }
 
     stages {
@@ -41,7 +43,7 @@ pipeline {
                     steps {
                         script {
                             // Build Docker image
-                            docker.withRegistry('https://index.docker.io/v1/', 'ankurdockercredentials') {
+                            docker.withRegistry('https://index.docker.io/v1/', 'dockercredentials') {
                                 def customImage = docker.build("${env.DOCKER_IMAGE_BACKEND}:${env.BUILD_ID}", "./lms-backend")
                                 customImage.push()
                             }
@@ -52,7 +54,7 @@ pipeline {
                 stage('build frontend') {
                     steps {
                         script {
-                            docker.withRegistry('https://index.docker.io/v1/', 'ankurdockercredentials') {
+                            docker.withRegistry('https://index.docker.io/v1/', 'dockercredentials') {
                                 def customImage = docker.build("${env.DOCKER_IMAGE_FRONTEND}:${env.BUILD_ID}", "./lms-frontend")
                                 customImage.push()
                             }
