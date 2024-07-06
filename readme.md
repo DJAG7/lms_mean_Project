@@ -23,6 +23,8 @@ Docker is used to containerize the application, ensuring it runs consistently ac
 This architecture is simple, and Costs are much lower than other MEAN stack applications. As we are running the DevOps pipelines locally and using ECR with EKS on EC2, costs are much cheaper than expected.
 Here is a breakdown of all the costs as per traffic requirements- 
 
+https://docs.google.com/spreadsheets/d/1r7bDFAQzaf0SYmX2BT6erCwdGGOYI72CV6sdgplVrTA/edit?usp=sharing
+
 ## Deployment Configuration
 
 The LMS project aims to deploy and scale a MEAN stack application (MongoDB, Express.js, Angular, Node.js) to ensure high availability and cost optimization.
@@ -366,7 +368,8 @@ Before we proceed with Terraform and Jenkins, Configure the following items-
 - AWSServiceRoleForAmazonEKSNodeGroup:
       Configure the built in role for AmazonEKSNodeGroup
   
-<! Insert AWS Screenshots here>
+![alt text](./screenshots/image-27.png)
+
 
 ##  Terraform Configuration:
 
@@ -534,18 +537,21 @@ Compiler with domain:
 - Use the IP addresses exported via Terraform for Grafana to connect to the instance.
 - The default username and password for Grafana is admin / admin. Log into the Grafana application
 
-!< Configure Grafana
+![alt text](./screenshots/image-23.png)
+
 
 - In Grafana select the Data Sources option under Connections.
 - Click add a data source and connect Prometheus 
 - Add the Prometheus endpoint IP
 
-!< Prometheus Connection
+![alt text](./screenshots/image-25.png)
+
 
 - After it is initialized, click on Dashboards and create a dashboard
 - We built a simple dashboard to check EC2 resources. The dashboard export is available in the repository as a .JSON export.
 
-!< Grafana Dashboard
+![alt text](./screenshots/image-26.png)
+
 
 
 # Conclusion
