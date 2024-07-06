@@ -155,7 +155,8 @@ Front end setup is done in a similar way with a Docker Hub image push.
 
 ## Install Angular CLI
 
-    command: npm install -g @angular/cli
+    command: npm install -g @angular/cli 
+For global angular installation
 
 ## Install Dependencies and Start Development Server
 
